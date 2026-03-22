@@ -1,0 +1,26 @@
+{
+  "name": "new-project",
+  "version": "1.0.0",
+  "description": "Fairbrix quiz backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "cross-env NODE_ENV=development node server.js",
+    "test": "echo  Error: no test specified && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cookie-session": "^2.1.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.3.1",
+    "twitter-api-v2": "^1.29.0"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
+  }
+}

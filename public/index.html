@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fairbrix Ultimate Quest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: #f5c842;
+      --green: #00e87a;
+      --dark: #020f07;
+      --panel: rgba(0,255,100,0.05);
+      --border: rgba(0,255,100,0.18);
+      --text: #d4f5e2;
+      --dim: #5a8a6a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Exo 2', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,232,122,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,232,122,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glow orbs */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px; left: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,232,122,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-orb-2 {
+      position: fixed;
+      bottom: -150px; right: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(245,200,66,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .screen.active { display: flex; }
+
+    /* ── PANEL ── */
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      max-width: 640px;
+      width: 100%;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 40px rgba(0,232,122,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    /* ── LOGO ── */
+    .logo {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, var(--green) 0%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      margin-bottom: 0.2rem;
+      animation: flicker 4s infinite;
+    }
+
+    @keyframes flicker {
+      0%,95%,100% { opacity: 1; }
+      96% { opacity: 0.85; }
+      97% { opacity: 1; }
+      98% { opacity: 0.9; }
+    }
+
+    .tagline {
+      font-size: 0.9rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), #00b85e);
+      color: #011a0a;
+      box-shadow: 0 0 20px rgba(0,232,122,0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 32px rgba(0,232,122,0.5);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #e0a800);
+      color: #1a1000;
+      box-shadow: 0 0 20px rgba(245,200,66,0.3);
+    }
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 32px rgba(245,200,66,0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--green);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover {
+      background: var(--panel);
+      border-color: var(--green);
+    }
+
+    .btn-twitter {
+      background: #000;
+      color: #fff;
+      border: 1px solid #333;
+      font-size: 1rem;
+      padding: 1rem 2.5rem;
+      width: 100%;
+    }
+    .btn-twitter:hover {
+      background: #111;
+      border-color: #555;
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: #ff6b6b;
+      border: 1px solid rgba(255,107,107,0.3);
+      font-size: 0.75rem;
+      padding: 0.4rem 1rem;
+    }
+    .btn-danger:hover { border-color: #ff6b6b; }
+
+    /* ── SECTION TITLES ── */
+    h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+    h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    /* ── USER BAR ── */
+    #user-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(2,15,7,0.9);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+    #user-bar.visible { display: flex; }
+    .user-handle {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      color: var(--green);
+    }
+    .user-score-badge {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.75rem;
+      color: var(--gold);
+      background: rgba(245,200,66,0.1);
+      border: 1px solid rgba(245,200,66,0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+    }
+
+    /* ── QUIZ ── */
+    .progress-bar {
+      height: 4px;
+      background: rgba(0,232,122,0.1);
+      border-radius: 2px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--gold));
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    .q-number {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .q-text {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      color: #e8f5ee;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .option {
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+      background: rgba(0,255,100,0.02);
+      text-align: left;
+    }
+    .option:hover { border-color: var(--green); background: rgba(0,232,122,0.08); }
+    .option.correct { border-color: var(--green); background: rgba(0,232,122,0.15); color: var(--green); }
+    .option.wrong { border-color: #ff6b6b; background: rgba(255,107,107,0.1); color: #ff6b6b; }
+    .option.disabled { pointer-events: none; }
+
+    /* ── TEXT INPUT / TEXTAREA ── */
+    .field {
+      width: 100%;
+      background: rgba(0,255,100,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'Exo 2', sans-serif;
+      font-size: 0.95rem;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field:focus { border-color: var(--green); }
+    .field::placeholder { color: var(--dim); }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── SCORE DISPLAY ── */
+    .score-big {
+      font-family: 'Orbitron', monospace;
+      font-size: 4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--green), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin: 1rem 0;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-label { color: var(--dim); }
+    .stat-val { color: var(--gold); font-family: 'Orbitron', monospace; font-size: 0.85rem; }
+
+    /* ── LEADERBOARD ── */
+    .lb-row {
+      display: grid;
+      grid-template-columns: 2rem 1fr auto;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      background: rgba(0,255,100,0.03);
+      border: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .lb-row:hover { background: rgba(0,255,100,0.07); }
+    .lb-row.top1 { border-color: var(--gold); background: rgba(245,200,66,0.07); }
+    .lb-row.top2 { border-color: #c0c0c0; }
+    .lb-row.top3 { border-color: #cd7f32; }
+
+    .lb-rank {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.8rem;
+      color: var(--dim);
+      text-align: center;
+    }
+    .lb-name { font-size: 0.95rem; }
+    .lb-score {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.85rem;
+      color: var(--gold);
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+    .tab {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--dim);
+      border: 1px solid transparent;
+      background: none;
+      transition: all 0.2s;
+    }
+    .tab.active { color: var(--green); border-color: var(--border); background: var(--panel); }
+    .tab:hover:not(.active) { color: var(--text); }
+
+    /* ── NAV ── */
+    .nav {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(0,232,122,0.15);
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      z-index: 999;
+      transition: transform 0.3s;
+      backdrop-filter: blur(10px);
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+    #toast.error { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,107,107,0.1); }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 1rem auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── MISC ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+    .center { text-align: center; }
+    .mt1 { margin-top: 1rem; }
+    .mt2 { margin-top: 2rem; }
+    p { line-height: 1.7; color: var(--dim); font-size: 0.95rem; }
+    .green { color: var(--green); }
+    .gold { color: var(--gold); }
+
+    /* ── FEEDBACK BADGE ── */
+    .feedback {
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .feedback.correct { background: rgba(0,232,122,0.15); color: var(--green); }
+    .feedback.wrong { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+
+    /* responsive */
+    @media(max-width:480px) {
+      .panel { padding: 1.5rem; }
+      .score-big { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="glow-orb-2"></div>
+
+<!-- User bar -->
+<div id="user-bar">
+  <span class="user-handle" id="ub-handle">@guest</span>
+  <span class="user-score-badge" id="ub-score">⚡ 0 pts</span>
+  <button class="btn btn-danger" onclick="logout()">Logout</button>
+</div>
+
+<!-- ══ SCREEN: LANDING ══ -->
+<div id="screen-landing" class="screen active">
+  <div class="panel center">
+    <div class="logo">FAIRBRIX</div>
+    <div class="tagline">Ultimate Quest — Earn. Compete. Conquer.</div>
+    <p style="margin-bottom:2rem;">Answer blockchain & crypto questions, track your X contributions, and climb the global leaderboard to win FBX rewards.</p>
+    <button class="btn btn-twitter" onclick="loginWithTwitter()">
+      𝕏 &nbsp; Sign in with X to Play
+    </button>
+    <div class="divider"></div>
+    <button class="btn btn-outline" style="width:100%" onclick="showScreen('screen-leaderboard'); loadLeaderboard()">
+      🏆 &nbsp; View Leaderboard
+    </button>
+  </div>
+</div>
+
+<!-- ══ SCREEN: LOBBY ══ -->
+<div id="screen-lobby" class="screen">
+  <div class="panel center">
+    <div class="logo" style="font-size:2rem;">FAIRBRIX</div>
+    <div class="tagline">Welcome back</div>
+    <div id="lobby-avatar" style="margin-bottom:1.5rem;"></div>
+    <div id="lobby-stats" style="margin-bottom:2rem;"></div>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:0.75rem;" onclick="startQuiz()">🎮 &nbsp; Start Quiz</button>
+    <button class="btn btn-gold" style="width:100%;margin-bottom:0.75rem;" onclick="showScreen('screen-leaderboard'); loadLeaderboard()">🏆 &nbsp; Leaderboard</button>
+    <button class="btn btn-outline" style="width:100%" onclick="showScreen('screen-twitter')">𝕏 &nbsp; Track X Contributions</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN: QUIZ ══ -->
+<div id="screen-quiz" class="screen">
+  <div class="panel" style="max-width:700px;">
+    <div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div>
+    <div class="q-number" id="q-number">Question 1 of 10</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="q-options"></div>
+    <div id="q-feedback"></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: SURVEY ══ -->
+<div id="screen-survey" class="screen">
+  <div class="panel">
+    <h2>Mission Debrief</h2>
+    <p style="margin-bottom:1.5rem;">One last step — share your vision to complete your submission.</p>
+
+    <label>Your name / display name</label>
+    <input class="field" id="sv-name" type="text" placeholder="e.g. CryptoHero42" />
+
+    <label>Your X / Twitter link (optional)</label>
+    <input class="field" id="sv-twitter" type="text" placeholder="https://x.com/yourhandle" />
+
+    <label>What's your vision for blockchain's future?</label>
+    <textarea class="field" id="sv-vision" rows="3" placeholder="Share your thoughts..."></textarea>
+
+    <label>Favourite blockchain project</label>
+    <input class="field" id="sv-blockchain" type="text" placeholder="e.g. Ethereum, Solana, Fairbrix..." />
+
+    <label>Testimonial (optional)</label>
+    <textarea class="field" id="sv-testimonial" rows="2" placeholder="What do you think of Fairbrix?"></textarea>
+
+    <button class="btn btn-primary" style="width:100%" onclick="submitQuiz()">⚡ &nbsp; Submit & See Results</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN: RESULTS ══ -->
+<div id="screen-results" class="screen">
+  <div class="panel center">
+    <h2>Quest Complete</h2>
+    <div class="score-big" id="res-score">0</div>
+    <div style="font-size:0.85rem;color:var(--dim);margin-bottom:1.5rem;" id="res-label">points earned</div>
+    <div id="res-stats"></div>
+    <div class="divider"></div>
+    <div class="nav">
+      <button class="btn btn-primary" onclick="startQuiz()">🔁 &nbsp; Play Again</button>
+      <button class="btn btn-gold" onclick="showScreen('screen-leaderboard'); loadLeaderboard()">🏆 &nbsp; Leaderboard</button>
+      <button class="btn btn-outline" onclick="showScreen('screen-twitter')">𝕏 &nbsp; Track X</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: LEADERBOARD ══ -->
+<div id="screen-leaderboard" class="screen">
+  <div class="panel" style="max-width:700px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+      <h2 style="margin:0;">🏆 Hall of Fame</h2>
+      <button class="btn btn-outline" style="font-size:0.7rem;padding:0.4rem 0.8rem;" onclick="loadLeaderboard()">↻ Refresh</button>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('total')">Total</button>
+      <button class="tab" onclick="switchTab('quiz')">Quiz</button>
+      <button class="tab" onclick="switchTab('twitter')">X Score</button>
+    </div>
+    <div id="lb-list"><div class="spinner"></div></div>
+    <div class="nav">
+      <button class="btn btn-outline" onclick="goBack()">← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: TWITTER ══ -->
+<div id="screen-twitter" class="screen">
+  <div class="panel center">
+    <h2>𝕏 Contribution Tracker</h2>
+    <p style="margin-bottom:1.5rem;">We'll scan X for Fairbrix mentions from your handle and credit you with contribution points.</p>
+    <label style="text-align:left;display:block;">Your X handle</label>
+    <input class="field" id="tw-handle" type="text" placeholder="@yourhandle" />
+    <button class="btn btn-primary" style="width:100%;margin-bottom:1rem;" onclick="trackTwitter()">🔍 &nbsp; Scan My X Activity</button>
+    <div id="tw-results"></div>
+    <div class="nav">
+      <button class="btn btn-outline" onclick="goBack()">← Back</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let currentUser = null;
+let quizQuestions = [];
+let currentQ = 0;
+let quizScore = 0;
+let answered = false;
+let prevScreen = 'screen-landing';
+let lbTab = 'total';
+let lbData = [];
+
+// ══════════════════════════════════════════
+//  QUESTIONS BANK
+// ══════════════════════════════════════════
+const ALL_QUESTIONS = [
+  { q: "What consensus mechanism does Bitcoin use?", opts: ["Proof of Stake","Proof of Work","Delegated Proof of Stake","Proof of Authority"], ans: 1 },
+  { q: "What does 'FBX' stand for in the Fairbrix ecosystem?", opts: ["Fairbrix Exchange","Fairbrix Token","FairBlock Xchange","Fiat Block X"], ans: 1 },
+  { q: "What is a smart contract?", opts: ["A legal document stored on the internet","Self-executing code stored on a blockchain","An agreement between two crypto wallets","A type of NFT"], ans: 1 },
+  { q: "Which blockchain introduced smart contracts?", opts: ["Bitcoin","Solana","Ethereum","Cardano"], ans: 2 },
+  { q: "What does DeFi stand for?", opts: ["Digital Finance","Decentralised Finance","Distributed Fiat","Delegated Finance"], ans: 1 },
+  { q: "What is a blockchain 'block'?", opts: ["A wallet address","A unit of cryptocurrency","A bundle of validated transactions","A type of mining hardware"], ans: 2 },
+  { q: "What does NFT stand for?", opts: ["Non-Fungible Token","New Financial Transaction","Network File Transfer","Non-Fixed Token"], ans: 0 },
+  { q: "What is the maximum supply of Bitcoin?", opts: ["100 million","21 million","50 million","Unlimited"], ans: 1 },
+  { q: "What is a crypto 'wallet'?", opts: ["A bank account for crypto","Software that stores private keys","A physical device only","A type of exchange"], ans: 1 },
+  { q: "What is 'gas' in Ethereum?", opts: ["A type of token","The fee paid for executing transactions","A consensus mechanism","A layer-2 solution"], ans: 1 },
+  { q: "What is a 'layer-2' solution?", opts: ["A second blockchain","A protocol built on top of a blockchain to improve scalability","A wallet extension","A type of stablecoin"], ans: 1 },
+  { q: "What does HODL mean in crypto culture?", opts: ["Hold On for Dear Life","High Order Distributed Ledger","Holding On During Loss","None of the above"], ans: 0 },
+  { q: "Which network is Fairbrix built on?", opts: ["Bitcoin","Ethereum","A custom chain","Solana"], ans: 2 },
+  { q: "What is a 'seed phrase'?", opts: ["A marketing slogan","A backup recovery phrase for a crypto wallet","A type of staking reward","A smart contract function"], ans: 1 },
+  { q: "What is staking in crypto?", opts: ["Mining with graphics cards","Locking tokens to support a network and earn rewards","Selling tokens on an exchange","Sending tokens to a burn address"], ans: 1 },
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ══════════════════════════════════════════
+//  SCREEN MANAGEMENT
+// ══════════════════════════════════════════
+function showScreen(id) {
+  prevScreen = document.querySelector('.screen.active')?.id || 'screen-landing';
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goBack() { showScreen(prevScreen); }
+
+// ══════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════
+async function checkSession() {
+  try {
+    const r = await fetch('/auth/me', { credentials: 'include' });
+    if (r.ok) {
+      const { user } = await r.json();
+      if (user) { setUser(user); return true; }
+    }
+  } catch(e) {}
+  return false;
+}
+
+function setUser(user) {
+  currentUser = user;
+  const bar = document.getElementById('user-bar');
+  bar.classList.add('visible');
+  document.getElementById('ub-handle').textContent = '@' + (user.twitterHandle || user.displayName || 'player');
+  document.getElementById('ub-score').textContent = '⚡ ' + (user.totalScore || 0) + ' pts';
+}
+
+function loginWithTwitter() {
+  window.location.href = '/auth/twitter';
+}
+
+async function logout() {
+  await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+  currentUser = null;
+  document.getElementById('user-bar').classList.remove('visible');
+  showScreen('screen-landing');
+  toast('Logged out.');
+}
+
+function showLobby() {
+  if (!currentUser) return showScreen('screen-landing');
+  const u = currentUser;
+  document.getElementById('lobby-avatar').innerHTML =
+    u.profileImage ? `<img src="${u.profileImage}" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--green);" />` : '';
+  document.getElementById('lobby-stats').innerHTML = `
+    <div class="stat-row"><span class="stat-label">Handle</span><span class="stat-val">@${u.twitterHandle || u.displayName || '—'}</span></div>
+    <div class="stat-row"><span class="stat-label">Quiz Score</span><span class="stat-val">${u.quizScore || 0}</span></div>
+    <div class="stat-row"><span class="stat-label">X Contributions</span><span class="stat-val">${u.contributionScore || 0}</span></div>
+    <div class="stat-row"><span class="stat-label">Total Score</span><span class="stat-val gold">${u.totalScore || 0}</span></div>
+  `;
+  showScreen('screen-lobby');
+}
+
+// ══════════════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════════════
+function startQuiz() {
+  quizQuestions = shuffle(ALL_QUESTIONS).slice(0, 10);
+  currentQ = 0;
+  quizScore = 0;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = quizQuestions[currentQ];
+  const total = quizQuestions.length;
+  document.getElementById('quiz-progress').style.width = ((currentQ / total) * 100) + '%';
+  document.getElementById('q-number').textContent = `Question ${currentQ + 1} of ${total}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-feedback').innerHTML = '';
+  answered = false;
+
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = '';
+  // Shuffle options display order
+  const indices = shuffle([0,1,2,3]);
+  indices.forEach(i => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = q.opts[i];
+    btn.onclick = () => selectAnswer(i, btn, q.ans);
+    opts.appendChild(btn);
+  });
+}
+
+function selectAnswer(chosen, btn, correct) {
+  if (answered) return;
+  answered = true;
+  const allOpts = document.querySelectorAll('.option');
+  allOpts.forEach(o => o.classList.add('disabled'));
+
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    quizScore++;
+    document.getElementById('q-feedback').innerHTML = '<span class="feedback correct">✓ Correct!</span>';
+  } else {
+    btn.classList.add('wrong');
+    // Highlight correct
+    allOpts.forEach(o => {
+      if (o.textContent === quizQuestions[currentQ].opts[correct]) o.classList.add('correct');
+    });
+    document.getElementById('q-feedback').innerHTML = '<span class="feedback wrong">✗ Wrong</span>';
+  }
+
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ < quizQuestions.length) {
+      renderQuestion();
+    } else {
+      endQuiz();
+    }
+  }, 1200);
+}
+
+function endQuiz() {
+  // Pre-fill survey name if logged in
+  if (currentUser) {
+    document.getElementById('sv-name').value = currentUser.displayName || currentUser.twitterHandle || '';
+  }
+  showScreen('screen-survey');
+}
+
+// ══════════════════════════════════════════
+//  SUBMIT
+// ══════════════════════════════════════════
+async function submitQuiz() {
+  const name = document.getElementById('sv-name').value.trim();
+  if (!name) { toast('Please enter your name.', true); return; }
+
+  const body = {
+    name,
+    quizScore,
+    total: quizQuestions.length,
+    futureVision: document.getElementById('sv-vision').value.trim(),
+    blockchain: document.getElementById('sv-blockchain').value.trim(),
+    testimonial: document.getElementById('sv-testimonial').value.trim(),
+    twitterLink: document.getElementById('sv-twitter').value.trim(),
+  };
+
+  try {
+    const r = await fetch('/api/submit-quiz', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await r.json();
+    if (r.ok) {
+      if (data.user) setUser(data.user);
+      showResults(data);
+    } else {
+      toast(data.message || 'Submission failed.', true);
+    }
+  } catch(e) {
+    // Offline fallback — show local results
+    showResults({ quizScore, totalScore: quizScore });
+    toast('Saved locally — check your connection.', true);
+  }
+}
+
+function showResults(data) {
+  const score = data.quizScore ?? quizScore;
+  const total = data.totalScore ?? score;
+  document.getElementById('res-score').textContent = score;
+  const pct = Math.round((score / quizQuestions.length) * 100);
+  let grade = pct >= 80 ? '🏆 Elite Fairbrix Agent' : pct >= 60 ? '⚡ Solid Performance' : '📚 Keep Learning';
+  document.getElementById('res-label').textContent = `out of ${quizQuestions.length} — ${grade}`;
+  document.getElementById('res-stats').innerHTML = `
+    <div class="stat-row"><span class="stat-label">Quiz Score</span><span class="stat-val">${score} / ${quizQuestions.length}</span></div>
+    <div class="stat-row"><span class="stat-label">Accuracy</span><span class="stat-val">${pct}%</span></div>
+    <div class="stat-row"><span class="stat-label">Total Score</span><span class="stat-val gold">⚡ ${total}</span></div>
+  `;
+  showScreen('screen-results');
+}
+
+// ══════════════════════════════════════════
+//  LEADERBOARD
+// ══════════════════════════════════════════
+async function loadLeaderboard() {
+  document.getElementById('lb-list').innerHTML = '<div class="spinner"></div>';
+  try {
+    const r = await fetch('/api/leaderboard', { credentials: 'include' });
+    const data = await r.json();
+    lbData = data.leaderboard || [];
+    renderLeaderboard();
+  } catch(e) {
+    document.getElementById('lb-list').innerHTML = '<p style="text-align:center;">Could not load leaderboard.</p>';
+  }
+}
+
+function switchTab(tab) {
+  lbTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderLeaderboard();
+}
+
+function renderLeaderboard() {
+  const list = document.getElementById('lb-list');
+  if (!lbData.length) { list.innerHTML = '<p style="text-align:center;color:var(--dim);">No players yet — be the first!</p>'; return; }
+
+  const sorted = [...lbData].sort((a, b) => {
+    const key = lbTab === 'quiz' ? 'quizScore' : lbTab === 'twitter' ? 'contributionScore' : 'totalScore';
+    return (b[key] || 0) - (a[key] || 0);
+  });
+
+  list.innerHTML = sorted.slice(0, 20).map((u, i) => {
+    const rank = i + 1;
+    const cls = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
+    const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+    const scoreKey = lbTab === 'quiz' ? 'quizScore' : lbTab === 'twitter' ? 'contributionScore' : 'totalScore';
+    const name = u.displayName || u.twitterHandle || 'Anonymous';
+    return `
+      <div class="lb-row ${cls}">
+        <div class="lb-rank">${medal}</div>
+        <div class="lb-name">${name}${u.twitterHandle ? `<br><span style="font-size:0.75rem;color:var(--dim);">@${u.twitterHandle}</span>` : ''}</div>
+        <div class="lb-score">⚡ ${u[scoreKey] || 0}</div>
+      </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  TWITTER TRACKER
+// ══════════════════════════════════════════
+async function trackTwitter() {
+  const handle = document.getElementById('tw-handle').value.trim().replace('@', '');
+  if (!handle) { toast('Enter your X handle first.', true); return; }
+
+  document.getElementById('tw-results').innerHTML = '<div class="spinner"></div>';
+  try {
+    const r = await fetch('/api/track-twitter', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ twitterHandle: handle }),
+    });
+    const data = await r.json();
+    if (r.ok) {
+      const m = data.metrics || {};
+      if (data.user) setUser(data.user);
+      document.getElementById('tw-results').innerHTML = `
+        <div style="margin-top:1rem;">
+          <div class="stat-row"><span class="stat-label">Fairbrix Tweets</span><span class="stat-val">${m.tweetCount || 0}</span></div>
+          <div class="stat-row"><span class="stat-label">Likes</span><span class="stat-val">${m.likes || 0}</span></div>
+          <div class="stat-row"><span class="stat-label">Reposts</span><span class="stat-val">${m.reposts || 0}</span></div>
+          <div class="stat-row"><span class="stat-label">Replies</span><span class="stat-val">${m.replies || 0}</span></div>
+          <div class="stat-row"><span class="stat-label">Contribution Score</span><span class="stat-val gold">⚡ ${m.score || 0}</span></div>
+          <div class="stat-row"><span class="stat-label">Total Score</span><span class="stat-val gold">⚡ ${data.totalScore || 0}</span></div>
+        </div>`;
+      toast('X activity tracked successfully!');
+    } else {
+      document.getElementById('tw-results').innerHTML = `<p style="color:#ff6b6b;">${data.message || 'Error tracking.'}</p>`;
+    }
+  } catch(e) {
+    document.getElementById('tw-results').innerHTML = '<p style="color:#ff6b6b;">Could not reach server.</p>';
+  }
+}
+
+// ══════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════
+let toastTimer;
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.className = '', 3000);
+}
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+(async () => {
+  const loggedIn = await checkSession();
+  // If redirected back from Twitter OAuth
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('auth') === 'success' && loggedIn) {
+    window.history.replaceState({}, '', '/');
+    showLobby();
+    toast('Welcome back, @' + (currentUser.twitterHandle || 'player') + '!');
+    return;
+  }
+  if (loggedIn) {
+    showLobby();
+  }
+})();
+</script>
+</body>
+</html>
