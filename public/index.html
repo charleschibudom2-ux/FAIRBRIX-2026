@@ -600,22 +600,327 @@ let lbData = [];
 // ══════════════════════════════════════════
 //  QUESTIONS BANK
 // ══════════════════════════════════════════
-const ALL_QUESTIONS = [
-  { q: "What consensus mechanism does Bitcoin use?", opts: ["Proof of Stake","Proof of Work","Delegated Proof of Stake","Proof of Authority"], ans: 1 },
-  { q: "What does 'FBX' stand for in the Fairbrix ecosystem?", opts: ["Fairbrix Exchange","Fairbrix Token","FairBlock Xchange","Fiat Block X"], ans: 1 },
-  { q: "What is a smart contract?", opts: ["A legal document stored on the internet","Self-executing code stored on a blockchain","An agreement between two crypto wallets","A type of NFT"], ans: 1 },
-  { q: "Which blockchain introduced smart contracts?", opts: ["Bitcoin","Solana","Ethereum","Cardano"], ans: 2 },
-  { q: "What does DeFi stand for?", opts: ["Digital Finance","Decentralised Finance","Distributed Fiat","Delegated Finance"], ans: 1 },
-  { q: "What is a blockchain 'block'?", opts: ["A wallet address","A unit of cryptocurrency","A bundle of validated transactions","A type of mining hardware"], ans: 2 },
-  { q: "What does NFT stand for?", opts: ["Non-Fungible Token","New Financial Transaction","Network File Transfer","Non-Fixed Token"], ans: 0 },
-  { q: "What is the maximum supply of Bitcoin?", opts: ["100 million","21 million","50 million","Unlimited"], ans: 1 },
-  { q: "What is a crypto 'wallet'?", opts: ["A bank account for crypto","Software that stores private keys","A physical device only","A type of exchange"], ans: 1 },
-  { q: "What is 'gas' in Ethereum?", opts: ["A type of token","The fee paid for executing transactions","A consensus mechanism","A layer-2 solution"], ans: 1 },
-  { q: "What is a 'layer-2' solution?", opts: ["A second blockchain","A protocol built on top of a blockchain to improve scalability","A wallet extension","A type of stablecoin"], ans: 1 },
-  { q: "What does HODL mean in crypto culture?", opts: ["Hold On for Dear Life","High Order Distributed Ledger","Holding On During Loss","None of the above"], ans: 0 },
-  { q: "Which network is Fairbrix built on?", opts: ["Bitcoin","Ethereum","A custom chain","Solana"], ans: 2 },
-  { q: "What is a 'seed phrase'?", opts: ["A marketing slogan","A backup recovery phrase for a crypto wallet","A type of staking reward","A smart contract function"], ans: 1 },
-  { q: "What is staking in crypto?", opts: ["Mining with graphics cards","Locking tokens to support a network and earn rewards","Selling tokens on an exchange","Sending tokens to a burn address"], ans: 1 },
+const fairbrixQuestions = [
+  {
+    q: "Why was Fairbrix originally created according to its modern whitepaper?",
+    opts: [
+      "To respond to Tenebrix’s premine",
+      "To build a stablecoin",
+      "To create a centralized exchange",
+      "To issue NFTs",
+    ],
+    ans: 0,
+  },
+  {
+    q: "Who originally launched Fairbrix before creating Litecoin?",
+    opts: ["Vitalik Buterin", "Charlie Lee", "Satoshi Nakamoto", "Gavin Andresen"],
+    ans: 1,
+  },
+  {
+    q: "Fairbrix is described as the direct predecessor to which cryptocurrency?",
+    opts: ["Ethereum", "Litecoin", "Dogecoin", "Monero"],
+    ans: 1,
+  },
+  {
+    q: "Which algorithm did Fairbrix adopt to resist GPU domination?",
+    opts: ["SHA-256", "Scrypt", "Ethash", "RandomX"],
+    ans: 1,
+  },
+  {
+    q: "What major exploit did Fairbrix suffer during its early days?",
+    opts: ["A 51% attack", "A Sybil attack", "A rug pull", "A market crash"],
+    ans: 0,
+  },
+  {
+    q: "Which principle keeps Fairbrix distribution free of premine or centralized allocation?",
+    opts: ["Fair Distribution", "Token burns", "Liquidity mining", "Governance staking"],
+    ans: 0,
+  },
+  {
+    q: "Which core principle focuses on keeping mining accessible through modern hardware?",
+    opts: ["Accessibility", "Monetization", "Privacy", "Stablecoins"],
+    ans: 0,
+  },
+  {
+    q: "Which Fairbrix principle ties unlimited supply to long-term miner incentives?",
+    opts: ["Sustainability", "Deflation", "Liquidity", "Volatility"],
+    ans: 0,
+  },
+  {
+    q: "Which principle centres on open-source development to build trust?",
+    opts: ["Transparency", "Insider trading", "Regulation", "Delegation"],
+    ans: 0,
+  },
+  {
+    q: "What principle envisions Fairbrix as a lasting legacy in crypto history?",
+    opts: ["Dynastic Vision", "Flash Loans", "Yield Farming", "Orbiting"],
+    ans: 0,
+  },
+  {
+    q: "Which nonprofit maintains Fairbrix’s historical records and education?",
+    opts: ["Fairbrix Foundation", "Litecoin Foundation", "Ethereum Foundation", "Bitcoin Foundation"],
+    ans: 0,
+  },
+  {
+    q: "What is the Fairbrix Foundation’s primary mission?",
+    opts: [
+      "Education, historical preservation, and global awareness",
+      "Launching NFTs",
+      "Building a CeFi exchange",
+      "Issuing security tokens",
+    ],
+    ans: 0,
+  },
+  {
+    q: "Which phrase does Fairbrix use to describe its mining invitation?",
+    opts: [
+      "Mine smarter with the original Scrypt coin created before Litecoin",
+      "Stake now for instant rewards",
+      "Build dApps in seconds",
+      "Trade FBX in one tap",
+    ],
+    ans: 0,
+  },
+  {
+    q: "How many FBX are created per block?",
+    opts: ["5", "50", "25", "100"],
+    ans: 2,
+  },
+  {
+    q: "Approximately how often is a Fairbrix block found?",
+    opts: ["Every hour", "Every five minutes", "Every ten seconds", "Every day"],
+    ans: 1,
+  },
+  {
+    q: "What consensus mechanism secures Fairbrix?",
+    opts: ["Proof of Stake", "Proof of Work", "Proof of Authority", "Delegated Proof of Stake"],
+    ans: 1,
+  },
+  {
+    q: "Which hashing algorithm powers Fairbrix mining?",
+    opts: ["Scrypt", "SHA-256", "Blake2b", "Ethash"],
+    ans: 0,
+  },
+  {
+    q: "After how many blocks does Fairbrix adjust its difficulty?",
+    opts: ["2,016", "256", "10,080", "1,440"],
+    ans: 0,
+  },
+  {
+    q: "Roughly how long do six Fairbrix confirmations take?",
+    opts: ["About 5 minutes", "About 24 hours", "About 30 minutes", "About 1 hour"],
+    ans: 2,
+  },
+  {
+    q: "Which hardware is recommended for Fairbrix mining today?",
+    opts: ["Scrypt ASIC miners", "GPU rigs", "Mobile phones", "Quantum chips"],
+    ans: 0,
+  },
+  {
+    q: "What is Fairbrix’s maximum supply?",
+    opts: ["Unlimited", "21 million", "84 million", "100 million"],
+    ans: 0,
+  },
+  {
+    q: "Which feature helps defend against future 51% attacks?",
+    opts: ["Checkpointing", "Flash staking", "Burning tokens", "Sharding"],
+    ans: 0,
+  },
+  {
+    q: "Which upgrade keeps Fairbrix transaction validation robust?",
+    opts: ["Robust transaction validation", "Instant settlement", "Smart wallet", "Dual chain"],
+    ans: 0,
+  },
+  {
+    q: "Where is the modern Fairbrix code hosted for contributors?",
+    opts: ["GitHub", "Instagram", "Slack", "Medium"],
+    ans: 0,
+  },
+  {
+    q: "Which feature gives Fairbrix holders precise control over spends?",
+    opts: ["Coin Control", "Auto swap", "Liquidity pool", "Rollup"],
+    ans: 0,
+  },
+  {
+    q: "What combination balances miner incentive according to the whitepaper?",
+    opts: [
+      "Fixed 25 FBX reward plus unlimited supply",
+      "Halvings every month",
+      "Burning tokens every block",
+      "Staking rewards only",
+    ],
+    ans: 0,
+  },
+  {
+    q: "What helps keep mining participation decentralized?",
+    opts: ["Affordable Scrypt ASICs", "Exclusive datacenters", "Mobile mining only", "Centralized exchanges"],
+    ans: 0,
+  },
+  {
+    q: "Which optional settings improve miner efficiency?",
+    opts: ["Adjusting power and fan limits", "Changing wallet address", "Posting on social media", "Buying more tokens"],
+    ans: 0,
+  },
+  {
+    q: "What is the first step to configure a Fairbrix miner?",
+    opts: ["Find the ASIC miner’s IP address", "Buy FBX", "Write a whitepaper", "Swap tokens"],
+    ans: 0,
+  },
+  {
+    q: "Which network scanner app is mentioned for locating your miner?",
+    opts: ["Fing", "Photoshop", "Zoom", "Steam"],
+    ans: 0,
+  },
+  {
+    q: "After finding a miner’s IP, what do you do?",
+    opts: [
+      "Open it in a browser to reach the miner UI",
+      "Send FBX to a friend",
+      "Shutdown the miner",
+      "Change blockchain",
+    ],
+    ans: 0,
+  },
+  {
+    q: "Which credentials are usually the defaults for miner login?",
+    opts: ["root/admin", "user/user", "miner/miner", "admin/123"],
+    ans: 0,
+  },
+  {
+    q: "Where do you enter the pool URL and worker info?",
+    opts: [
+      "Pool Settings or Miner Configuration page",
+      "Dashboard only",
+      "Explorer",
+      "News page",
+    ],
+    ans: 0,
+  },
+  {
+    q: "What example worker name is shown in the guide?",
+    opts: ["yourusername.worker1", "mining.work", "workerFBX", "user1"],
+    ans: 0,
+  },
+  {
+    q: "What should happen after saving pool settings?",
+    opts: [
+      "The miner tries to connect to the pool",
+      "The miner powers off",
+      "Wallet resets",
+      "Transactions revert",
+    ],
+    ans: 0,
+  },
+  {
+    q: "Which screen helps you confirm the miner–pool link?",
+    opts: ["The status page", "Calendar", "Explorer home", "News feed"],
+    ans: 0,
+  },
+  {
+    q: "Which dashboards should you monitor after mining starts?",
+    opts: [
+      "Miner dashboard and pool website",
+      "Email inbox and token price",
+      "Social media only",
+      "None required",
+    ],
+    ans: 0,
+  },
+  {
+    q: "Which tweaks can reduce energy use?",
+    opts: ["Power and fan settings", "Account password", "Blockchain fork", "Token burn"],
+    ans: 0,
+  },
+  {
+    q: "Which upkeep keeps your miner operationally safe?",
+    opts: [
+      "Changing default password, cleaning, updating firmware",
+      "Posting on social media",
+      "Ignoring updates",
+      "Mining on random pools",
+    ],
+    ans: 0,
+  },
+  {
+    q: "Where do you track your Fairbrix mining earnings?",
+    opts: ["Your pool account dashboard", "GitHub repo", "BitcoinTalk thread", "YouTube livestream"],
+    ans: 0,
+  },
+  {
+    q: "Who does the homepage credit with reviving Fairbrix to fix past issues?",
+    opts: ["Crypto Archeologists", "Bankers", "Robots", "Miners union"],
+    ans: 0,
+  },
+  {
+    q: "Which phrase captures the revived Fairbrix’s mission?",
+    opts: [
+      "Reviving the legacy of a fair cryptocurrency dynasty",
+      "Launching web3 tokens",
+      "Daily token drops",
+      "Corporate staking",
+    ],
+    ans: 0,
+  },
+  {
+    q: "Which of the following is part of the Fairbrix Foundation’s nonprofit mandate?",
+    opts: [
+      "Education, historical preservation, and global awareness",
+      "High-frequency trading",
+      "Issuing bonds",
+      "NFT game publishing",
+    ],
+    ans: 0,
+  },
+  {
+    q: "Which team curates and maintains Fairbrix’s educational content?",
+    opts: ["Editorial Staff", "Miner Ops", "Token Listing", "Marketing"],
+    ans: 0,
+  },
+  {
+    q: "Which contact email handles general Fairbrix questions?",
+    opts: [
+      "fairbrixfoundation@gmail.com",
+      "admin@bitcoin.org",
+      "support@ethereum.org",
+      "info@litecoin.org",
+    ],
+    ans: 0,
+  },
+  {
+    q: "Which official social handle is listed for the Fairbrix Foundation?",
+    opts: ["X/Twitter @Fairbrix", "Instagram @example", "Telegram @test", "LinkedIn @company"],
+    ans: 0,
+  },
+  {
+    q: "What does the about page urge visitors to do?",
+    opts: [
+      "Join us as we bring this project back into the limelight",
+      "Sell FBX immediately",
+      "Stake on another chain",
+      "Ignore the community",
+    ],
+    ans: 0,
+  },
+  {
+    q: "What mining approach does fairbrix.io promote?",
+    opts: [
+      "Proof-of-Work mining via the Scrypt algorithm",
+      "Staking on a private chain",
+      "Proof of Authority blocks",
+      "Delegated Proof of Stake",
+    ],
+    ans: 0,
+  },
+  {
+    q: "Which resource is listed under the Community & Blockchain section?",
+    opts: ["Official Explorer", "Netflix", "Google Ads", "Amazon AWS"],
+    ans: 0,
+  },
+  {
+    q: "How does the official site classify FBX?",
+    opts: ["Coin", "NFT", "Security token", "Government bond"],
+    ans: 0,
+  },
 ];
 
 function shuffle(arr) {

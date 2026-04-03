@@ -4,72 +4,73 @@ This repository now runs an Express service that powers the Fairbrix Ultimate Qu
 
 ## Setup
 
-1. Install dependencies once (done already). If you need to re-run:
+1. Install the dependencies (if you need to re-run):
    `ash
    npm install
    `
-2. Provide the following environment variables (.env or hosting platform):
+2. Provide the following environment variables (via .env or your hosting platform):
    - PORT (optional, defaults to 4000)
    - FRONTEND_URL (optional, so the OAuth flow can redirect back)
    - MONGO_URI (defaults to mongodb://127.0.0.1:27017/fairbrix)
-   - SESSION_SECRET (any long random string)
+   - SESSION_SECRET (any long random string for the cookie session)
    - TWITTER_CLIENT_ID, TWITTER_CLIENT_SECRET, TWITTER_CALLBACK_URL (for X OAuth 2.0)
-   - TWITTER_BEARER_TOKEN (for searching Fairbrix mentions, read-only tokens are fine)
-3. Drop your existing quiz HTML into public/index.html or update the placeholder there so the Express app can serve it as static content.
-4. Run the backend:
+   - TWITTER_BEARER_TOKEN (for searching Fairbrix mentions; read-only tokens are fine)
+3. Replace the placeholder in public/index.html with your complete quiz UI so Express can serve it as-is.
+4. Start the backend:
    `ash
    npm start
    `
+   Use 
+pm run dev if you prefer NODE_ENV=development logging / auto-reload workflows.
 
 ## API Overview
 
-These endpoints use HTTP-only cookie sessions with credentials: 'include'.
+These REST endpoints rely on HTTP-only cookie sessions with credentials: 'include'.
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
-| GET | /auth/twitter | Starts the X (Twitter) OAuth 2.0 authorization flow. Redirects to X.
+| GET | /auth/twitter | Starts the X (Twitter) OAuth 2.0 flow and redirects to X for consent.
 | GET | /auth/twitter/callback | Handles the OAuth callback, creates/updates the user, and stores the session.
-| GET | /auth/me | Returns the logged-in profile ({ user: { id, twitterHandle, displayName, profileImage, quizScore, contributionScore, totalScore } }).
+| GET | /auth/me | Returns the signed-in profile: { user: { id, twitterHandle, displayName, profileImage, quizScore, contributionScore, totalScore } }.
 | POST | /auth/logout | Clears the session.
-| POST | /api/submit-quiz | Saves a quiz run. Body must include { name, quizScore, total, futureVision, blockchain, testimonial, twitterLink }. Assumes the session already knows the Twitter user and updates their total score.
-| GET | /api/leaderboard | Returns the top 50 players ordered by 	otalScore. Response shape: { leaderboard: [ ... ] }.
-| GET | /api/user/:id | Fetches a single user's saved state, useful for detail pages.
-| POST | /api/track-twitter | Triggers a Twitter API search for Fairbrix OR #Fairbrix from the given handle. Body should include { twitterHandle } or { userId }. Returns the metrics plus updated total score.
+| POST | /api/submit-quiz | Saves a quiz run (body requires { name, quizScore, total, futureVision, blockchain, testimonial, twitterLink }).
+| GET | /api/leaderboard | Returns the top 50 players ordered by 	otalScore. Response: { leaderboard: [...] }.
+| GET | /api/user/:id | Fetches a single user’s stored state, useful for profile/score pages.
+| POST | /api/track-twitter | Searches Fairbrix mentions from the configured handle. Body needs { twitterHandle } or { userId }. Returns the contributions metrics plus the updated 	otalScore.
+
+## Contribution tracker notes
+
+The /api/track-twitter endpoint proxies the X search API, which requires a paid developer tier (e.g., Elevated or above). If your bearer token lacks that access, the backend now responds with HTTP 402 and a message like Tweet search access requires an upgraded X developer plan.. Handle this on the UI by showing a friendly warning (and optionally disabling the  scan my activity button) until you have a plan that supports tweet search.
 
 ## Front-End Integration
 
-To hook the existing quiz UI to this backend:
-
-1. Call /auth/twitter from your login button to start the OAuth dance and redirect back.
-2. After each quiz, POST the answers to /api/submit-quiz with credentials: 'include' so the server can link the attempt to the current session.
-3. When showing the Hall of Fame, fetch /api/leaderboard and render the entries instead of relying on window.storage.
-4. Provide a button that POSTs to /api/track-twitter to refresh contribution scores before reading them from the leaderboard response.
-
-Example etch for submitting a quiz:
-`js
-await fetch('/api/submit-quiz', {
-  method: 'POST',
-  credentials: 'include',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    name: player.name,
-    quizScore: score,
-    total: questions.length,
-    futureVision,
-    blockchain,
-    testimonial,
-    twitterLink: twitterLink || '',
-  }),
-});
-`
-
-Use etch('/auth/me', { credentials: 'include' }) to show the signed-in handle and decide whether to enable quiz controls.
+1. Hook your login button to GET /auth/twitter so players can sign in via X. Once they return, call /auth/me (with credentials: 'include') to know who is logged in and toggle the quiz UI.
+2. After each quiz run, POST to /api/submit-quiz with this payload:
+   `js
+   await fetch('/api/submit-quiz', {
+     method: 'POST',
+     credentials: 'include',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({
+       name: player.name,
+       quizScore: score,
+       total: questions.length,
+       futureVision,
+       blockchain,
+       testimonial,
+       twitterLink: twitterLink || '',
+     }),
+   });
+   `
+3. Render the leaderboard by calling /api/leaderboard. Replace the window.storage logic with the entries returned by that endpoint so the rankings reflect real data.
+4. Let players trigger /api/track-twitter before leaderboard refresh. When the backend responds with status: 402, show a clear notice (e.g., Upgrade your X API plan to scan Fairbrix mentions) and disable the scan button until the issue is resolved. All other errors should surface via the returned message so the user isn’t guessing what went wrong.
 
 ## Rewards Hook
 
-services/rewardService.js is currently a placeholder logging the amount that would be sent through an FBX faucet. Replace the Issuing reward... console.log block with whichever payout system you prefer (mint API call, smart contract, etc.) and call that helper from /submit-quiz or after /track-twitter once the score threshold is reached.
+services/rewardService.js currently logs the action (console.log). Replace that stub with your actual FBX faucet or payout mechanism and call it from /api/submit-quiz or after /api/track-twitter once you have a scoring threshold.
 
 ## Testing
 
-Right now there are no automated tests. Running 
-pm start and pointing the browser at the server will serve the static public folder and the API described above.
+There are no automated tests yet. Running 
+pm start (or 
+pm run dev) and pointing your browser at http://localhost:4000 lets you interact with both the static front end and the API routes described above.
