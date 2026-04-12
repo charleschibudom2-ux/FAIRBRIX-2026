@@ -14,10 +14,10 @@
       --border: rgba(0,255,100,0.18);
       --text: #d4f5e2;
       --dim: #5a8a6a;
+      --red: #ff4d6d;
+      --blue: #00cfff;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Exo 2', sans-serif;
       background: var(--dark);
@@ -25,581 +25,307 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
-    /* Background grid */
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image:
         linear-gradient(rgba(0,232,122,0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0,232,122,0.04) 1px, transparent 1px);
       background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 0;
+      pointer-events: none; z-index: 0;
     }
+    .orb1 { position:fixed; top:-200px; left:-200px; width:600px; height:600px; background:radial-gradient(circle,rgba(0,232,122,0.08) 0%,transparent 70%); pointer-events:none; z-index:0; }
+    .orb2 { position:fixed; bottom:-150px; right:-150px; width:500px; height:500px; background:radial-gradient(circle,rgba(245,200,66,0.06) 0%,transparent 70%); pointer-events:none; z-index:0; }
 
-    /* Glow orbs */
-    body::after {
-      content: '';
-      position: fixed;
-      top: -200px; left: -200px;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(0,232,122,0.08) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
+    .screen { position:relative; z-index:1; min-height:100vh; display:none; flex-direction:column; align-items:center; justify-content:center; padding:2rem 1rem; }
+    .screen.active { display:flex; }
 
-    .glow-orb-2 {
-      position: fixed;
-      bottom: -150px; right: -150px;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(245,200,66,0.06) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
+    .panel { background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:2rem; max-width:620px; width:100%; backdrop-filter:blur(12px); box-shadow:0 0 40px rgba(0,232,122,0.06), inset 0 1px 0 rgba(255,255,255,0.04); }
 
-    /* ── SCREENS ── */
-    .screen {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-    }
-    .screen.active { display: flex; }
+    .logo { font-family:'Orbitron',monospace; font-size:clamp(2rem,6vw,3.5rem); font-weight:900; letter-spacing:0.08em; background:linear-gradient(135deg,var(--green) 0%,var(--gold) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:flicker 5s infinite; }
+    @keyframes flicker { 0%,96%,100%{opacity:1} 97%{opacity:0.8} 98%{opacity:1} 99%{opacity:0.85} }
 
-    /* ── PANEL ── */
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2.5rem;
-      max-width: 640px;
-      width: 100%;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 0 40px rgba(0,232,122,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
-    }
+    .tagline { font-size:0.78rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--dim); margin-bottom:2rem; }
 
-    /* ── LOGO ── */
-    .logo {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(2.2rem, 6vw, 3.8rem);
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      background: linear-gradient(135deg, var(--green) 0%, var(--gold) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: none;
-      margin-bottom: 0.2rem;
-      animation: flicker 4s infinite;
-    }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.85rem 2rem; border-radius:10px; font-family:'Orbitron',monospace; font-size:0.78rem; font-weight:700; letter-spacing:0.1em; cursor:pointer; border:none; transition:all 0.2s; width:100%; margin-top:0.7rem; }
+    .btn-primary { background:linear-gradient(135deg,var(--green),#00b85e); color:#011a0a; box-shadow:0 0 20px rgba(0,232,122,0.25); }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 0 32px rgba(0,232,122,0.45); }
+    .btn-gold { background:linear-gradient(135deg,var(--gold),#e0a800); color:#1a1000; box-shadow:0 0 20px rgba(245,200,66,0.25); }
+    .btn-gold:hover { transform:translateY(-2px); box-shadow:0 0 32px rgba(245,200,66,0.45); }
+    .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+    .btn-outline:hover { border-color:var(--green); color:var(--green); }
+    .btn-red { background:linear-gradient(135deg,var(--red),#c0002a); color:#fff; }
+    .btn:disabled { opacity:0.4; cursor:not-allowed; transform:none !important; }
 
-    @keyframes flicker {
-      0%,95%,100% { opacity: 1; }
-      96% { opacity: 0.85; }
-      97% { opacity: 1; }
-      98% { opacity: 0.9; }
-    }
+    /* STREAK */
+    .streak-row { display:flex; gap:8px; justify-content:center; margin:1.5rem 0; flex-wrap:wrap; }
+    .day-dot { width:46px; height:46px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:'Orbitron',monospace; font-size:0.55rem; font-weight:700; color:var(--dim); position:relative; transition:all 0.3s; flex-shrink:0; }
+    .day-dot.done { border-color:var(--green); background:rgba(0,232,122,0.12); }
+    .day-dot.done::after { content:'✓'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:1.1rem; color:var(--green); }
+    .day-dot.done span { display:none; }
+    .day-dot.today { border-color:var(--gold); background:rgba(245,200,66,0.1); color:var(--gold); animation:pulse 2s infinite; }
+    .day-dot.payout { border-color:var(--gold); color:var(--gold); font-size:0.5rem; text-align:center; line-height:1.2; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(245,200,66,0.4)} 50%{box-shadow:0 0 0 8px rgba(245,200,66,0)} }
 
-    .tagline {
-      font-size: 0.9rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--dim);
-      margin-bottom: 2.5rem;
-    }
+    /* PRIZE POOL */
+    .prize-pool { background:rgba(245,200,66,0.05); border:1px solid rgba(245,200,66,0.2); border-radius:14px; padding:1.2rem; margin-bottom:1.5rem; text-align:center; }
+    .prize-label { font-size:0.7rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--dim); margin-bottom:0.3rem; }
+    .prize-amount { font-family:'Orbitron',monospace; font-size:2.2rem; font-weight:900; color:var(--gold); }
 
-    /* ── BUTTONS ── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.8rem 2rem;
-      border-radius: 10px;
-      font-family: 'Orbitron', monospace;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-      text-decoration: none;
-    }
+    .cost-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(245,200,66,0.1); border:1px solid rgba(245,200,66,0.3); border-radius:20px; padding:0.4rem 1rem; font-family:'Orbitron',monospace; font-size:0.82rem; color:var(--gold); }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--green), #00b85e);
-      color: #011a0a;
-      box-shadow: 0 0 20px rgba(0,232,122,0.3);
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 32px rgba(0,232,122,0.5);
-    }
+    /* ── MILLIONAIRE-STYLE TIMER ── */
+    .timer-wrap { position:relative; display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem; width:110px; height:110px; }
+    .timer-svg { position:absolute; top:0; left:0; transform:rotate(-90deg); }
+    .timer-bg { fill:none; stroke:rgba(0,232,122,0.08); stroke-width:8; }
+    .timer-ring { fill:none; stroke-width:8; stroke-linecap:round; stroke-dasharray:283; stroke-dashoffset:0; transition:stroke-dashoffset 0.1s linear, stroke 0.3s; }
+    .timer-center { font-family:'Orbitron',monospace; font-size:2rem; font-weight:900; color:var(--green); z-index:1; transition:color 0.3s; }
+    .timer-center.danger { color:var(--red); }
 
-    .btn-gold {
-      background: linear-gradient(135deg, var(--gold), #e0a800);
-      color: #1a1000;
-      box-shadow: 0 0 20px rgba(245,200,66,0.3);
-    }
-    .btn-gold:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 32px rgba(245,200,66,0.5);
-    }
+    /* QUESTION */
+    .q-category { font-size:0.68rem; letter-spacing:0.28em; text-transform:uppercase; color:var(--green); margin-bottom:0.6rem; }
+    .q-text { font-size:1.05rem; font-weight:600; line-height:1.55; margin-bottom:1.5rem; color:var(--text); min-height:60px; }
 
-    .btn-outline {
-      background: transparent;
-      color: var(--green);
-      border: 1px solid var(--border);
-    }
-    .btn-outline:hover {
-      background: var(--panel);
-      border-color: var(--green);
-    }
+    .options { display:flex; flex-direction:column; gap:0.6rem; }
+    .option { padding:0.85rem 1.2rem; border-radius:12px; border:1px solid var(--border); background:rgba(0,255,100,0.03); cursor:pointer; font-size:0.92rem; transition:all 0.18s; text-align:left; color:var(--text); display:flex; align-items:center; gap:12px; }
+    .option-letter { font-family:'Orbitron',monospace; font-size:0.75rem; font-weight:700; width:26px; height:26px; border-radius:50%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--dim); transition:all 0.18s; }
+    .option:hover:not(.disabled) { border-color:var(--green); background:rgba(0,232,122,0.08); transform:translateX(5px); }
+    .option:hover:not(.disabled) .option-letter { border-color:var(--green); color:var(--green); background:rgba(0,232,122,0.15); }
+    .option.correct { border-color:var(--green); background:rgba(0,232,122,0.14); animation:correctFlash 0.4s; }
+    .option.correct .option-letter { background:var(--green); color:#011a0a; border-color:var(--green); }
+    .option.wrong { border-color:var(--red); background:rgba(255,77,109,0.1); animation:wrongShake 0.4s; }
+    .option.wrong .option-letter { background:var(--red); color:#fff; border-color:var(--red); }
+    .option.disabled { cursor:default; }
+    @keyframes correctFlash { 0%{transform:scale(1)} 50%{transform:scale(1.02)} 100%{transform:scale(1)} }
+    @keyframes wrongShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
 
-    .btn-twitter {
-      background: #000;
-      color: #fff;
-      border: 1px solid #333;
-      font-size: 1rem;
-      padding: 1rem 2.5rem;
-      width: 100%;
-    }
-    .btn-twitter:hover {
-      background: #111;
-      border-color: #555;
-      transform: translateY(-2px);
-    }
+    /* SCORE ROW */
+    .score-row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .score-item { text-align:center; flex:1; background:rgba(0,255,100,0.03); border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.4rem; }
+    .score-label { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--dim); }
+    .score-val { font-family:'Orbitron',monospace; font-size:1.2rem; font-weight:700; color:var(--gold); }
+    .score-val.green { color:var(--green); }
+    .score-val.red { color:var(--red); }
 
-    .btn-danger {
-      background: transparent;
-      color: #ff6b6b;
-      border: 1px solid rgba(255,107,107,0.3);
-      font-size: 0.75rem;
-      padding: 0.4rem 1rem;
-    }
-    .btn-danger:hover { border-color: #ff6b6b; }
+    /* FEEDBACK */
+    .feedback { margin-top:1rem; padding:0.7rem 1rem; border-radius:10px; font-size:0.88rem; text-align:center; min-height:40px; transition:all 0.3s; }
+    .feedback.correct { background:rgba(0,232,122,0.1); border:1px solid rgba(0,232,122,0.3); color:var(--green); }
+    .feedback.wrong { background:rgba(255,77,109,0.08); border:1px solid rgba(255,77,109,0.3); color:var(--red); }
+    .feedback.timeout { background:rgba(245,200,66,0.08); border:1px solid rgba(245,200,66,0.3); color:var(--gold); }
 
-    /* ── SECTION TITLES ── */
-    h2 {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--green);
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.05em;
-    }
-    h3 {
-      font-family: 'Orbitron', monospace;
-      font-size: 1rem;
-      color: var(--gold);
-      margin-bottom: 1rem;
-    }
+    /* LIFELINES */
+    .lifelines { display:flex; gap:8px; justify-content:center; margin-bottom:1.2rem; }
+    .lifeline-btn { padding:0.4rem 0.9rem; border-radius:8px; font-family:'Orbitron',monospace; font-size:0.65rem; font-weight:700; cursor:pointer; border:1px solid var(--border); background:rgba(0,207,255,0.06); color:var(--blue); transition:all 0.2s; }
+    .lifeline-btn:hover:not(:disabled) { border-color:var(--blue); background:rgba(0,207,255,0.12); }
+    .lifeline-btn:disabled { opacity:0.3; cursor:not-allowed; }
 
-    /* ── USER BAR ── */
-    #user-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1.5rem;
-      background: rgba(2,15,7,0.9);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(10px);
-    }
-    #user-bar.visible { display: flex; }
-    .user-handle {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.8rem;
-      color: var(--green);
-    }
-    .user-score-badge {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.75rem;
-      color: var(--gold);
-      background: rgba(245,200,66,0.1);
-      border: 1px solid rgba(245,200,66,0.2);
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-    }
+    /* PROGRESS DOTS */
+    .q-dots { display:flex; gap:6px; justify-content:center; margin-bottom:1.2rem; }
+    .q-dot { width:10px; height:10px; border-radius:50%; background:var(--border); transition:all 0.3s; }
+    .q-dot.done { background:var(--green); }
+    .q-dot.current { background:var(--gold); animation:pulse 1.5s infinite; }
+    .q-dot.wrong-done { background:var(--red); }
 
-    /* ── QUIZ ── */
-    .progress-bar {
-      height: 4px;
-      background: rgba(0,232,122,0.1);
-      border-radius: 2px;
-      margin-bottom: 2rem;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--green), var(--gold));
-      border-radius: 2px;
-      transition: width 0.4s ease;
-    }
+    /* ANTI-CHEAT notice */
+    .anticheat-badge { display:flex; align-items:center; gap:6px; font-size:0.7rem; color:var(--dim); margin-bottom:0.8rem; }
+    .anticheat-badge span { width:6px; height:6px; border-radius:50%; background:var(--green); display:inline-block; animation:blink 1.5s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    .q-number {
-      font-size: 0.75rem;
-      letter-spacing: 0.2em;
-      color: var(--dim);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
+    /* LEADERBOARD */
+    .lb-row { display:flex; align-items:center; gap:12px; padding:0.75rem 1rem; border-radius:10px; border:1px solid var(--border); background:transparent; margin-bottom:0.5rem; transition:all 0.2s; }
+    .lb-row.qualified { border-color:rgba(245,200,66,0.35); background:rgba(245,200,66,0.04); }
+    .lb-row.you { border-color:rgba(0,232,122,0.4); background:rgba(0,232,122,0.06); }
+    .lb-rank { font-family:'Orbitron',monospace; font-weight:700; font-size:1rem; width:28px; }
 
-    .q-text {
-      font-size: 1.15rem;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-      color: #e8f5ee;
-    }
+    h3 { font-family:'Orbitron',monospace; font-size:0.8rem; font-weight:700; color:var(--dim); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1rem; }
+    .divider { border:none; border-top:1px solid var(--border); margin:1.5rem 0; }
 
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
+    /* RESULT */
+    .result-icon { font-size:3.5rem; text-align:center; margin-bottom:0.8rem; }
+    .result-title { font-family:'Orbitron',monospace; font-size:1.5rem; font-weight:900; text-align:center; background:linear-gradient(135deg,var(--green),var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:0.5rem; }
+    .result-sub { font-size:0.9rem; color:var(--dim); text-align:center; margin-bottom:1.5rem; }
 
-    .option {
-      padding: 1rem 1.2rem;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-size: 0.95rem;
-      background: rgba(0,255,100,0.02);
-      text-align: left;
-    }
-    .option:hover { border-color: var(--green); background: rgba(0,232,122,0.08); }
-    .option.correct { border-color: var(--green); background: rgba(0,232,122,0.15); color: var(--green); }
-    .option.wrong { border-color: #ff6b6b; background: rgba(255,107,107,0.1); color: #ff6b6b; }
-    .option.disabled { pointer-events: none; }
+    /* SUSPENDED */
+    .suspended-screen { text-align:center; padding:3rem 2rem; }
+    .sus-icon { font-size:4rem; margin-bottom:1rem; }
 
-    /* ── TEXT INPUT / TEXTAREA ── */
-    .field {
-      width: 100%;
-      background: rgba(0,255,100,0.03);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-family: 'Exo 2', sans-serif;
-      font-size: 0.95rem;
-      padding: 0.85rem 1rem;
-      margin-bottom: 1rem;
-      resize: vertical;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .field:focus { border-color: var(--green); }
-    .field::placeholder { color: var(--dim); }
-
-    label {
-      display: block;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--dim);
-      margin-bottom: 0.4rem;
-    }
-
-    /* ── SCORE DISPLAY ── */
-    .score-big {
-      font-family: 'Orbitron', monospace;
-      font-size: 4rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--green), var(--gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1;
-      margin: 1rem 0;
-    }
-
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.9rem;
-    }
-    .stat-row:last-child { border-bottom: none; }
-    .stat-label { color: var(--dim); }
-    .stat-val { color: var(--gold); font-family: 'Orbitron', monospace; font-size: 0.85rem; }
-
-    /* ── LEADERBOARD ── */
-    .lb-row {
-      display: grid;
-      grid-template-columns: 2rem 1fr auto;
-      gap: 0.75rem;
-      align-items: center;
-      padding: 0.85rem 1rem;
-      border-radius: 10px;
-      margin-bottom: 0.5rem;
-      background: rgba(0,255,100,0.03);
-      border: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-    .lb-row:hover { background: rgba(0,255,100,0.07); }
-    .lb-row.top1 { border-color: var(--gold); background: rgba(245,200,66,0.07); }
-    .lb-row.top2 { border-color: #c0c0c0; }
-    .lb-row.top3 { border-color: #cd7f32; }
-
-    .lb-rank {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.8rem;
-      color: var(--dim);
-      text-align: center;
-    }
-    .lb-name { font-size: 0.95rem; }
-    .lb-score {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.85rem;
-      color: var(--gold);
-    }
-
-    /* ── TABS ── */
-    .tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.5rem;
-    }
-    .tab {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      padding: 0.4rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      color: var(--dim);
-      border: 1px solid transparent;
-      background: none;
-      transition: all 0.2s;
-    }
-    .tab.active { color: var(--green); border-color: var(--border); background: var(--panel); }
-    .tab:hover:not(.active) { color: var(--text); }
-
-    /* ── NAV ── */
-    .nav {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 1.5rem;
-    }
-
-    /* ── TOAST ── */
-    #toast {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: rgba(0,232,122,0.15);
-      border: 1px solid var(--green);
-      color: var(--green);
-      padding: 0.75rem 1.5rem;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      z-index: 999;
-      transition: transform 0.3s;
-      backdrop-filter: blur(10px);
-    }
-    #toast.show { transform: translateX(-50%) translateY(0); }
-    #toast.error { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,107,107,0.1); }
-
-    /* ── SPINNER ── */
-    .spinner {
-      width: 32px; height: 32px;
-      border: 3px solid var(--border);
-      border-top-color: var(--green);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin: 1rem auto;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── MISC ── */
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 1.5rem 0;
-    }
-    .center { text-align: center; }
-    .mt1 { margin-top: 1rem; }
-    .mt2 { margin-top: 2rem; }
-    p { line-height: 1.7; color: var(--dim); font-size: 0.95rem; }
-    .green { color: var(--green); }
-    .gold { color: var(--gold); }
-
-    /* ── FEEDBACK BADGE ── */
-    .feedback {
-      display: inline-block;
-      margin-top: 0.75rem;
-      padding: 0.4rem 1rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-    .feedback.correct { background: rgba(0,232,122,0.15); color: var(--green); }
-    .feedback.wrong { background: rgba(255,107,107,0.15); color: #ff6b6b; }
-
-    /* responsive */
-    @media(max-width:480px) {
-      .panel { padding: 1.5rem; }
-      .score-big { font-size: 3rem; }
-    }
+    /* CONFETTI */
+    .confetti-piece { position:fixed; width:8px; height:8px; pointer-events:none; z-index:999; animation:confettiFall linear forwards; }
+    @keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0deg); opacity:1} 100%{transform:translateY(110vh) rotate(720deg); opacity:0} }
   </style>
 </head>
 <body>
-<div class="glow-orb-2"></div>
+<div class="orb1"></div>
+<div class="orb2"></div>
 
-<!-- User bar -->
-<div id="user-bar">
-  <span class="user-handle" id="ub-handle">@guest</span>
-  <span class="user-score-badge" id="ub-score">⚡ 0 pts</span>
-  <button class="btn btn-danger" onclick="logout()">Logout</button>
-</div>
-
-<!-- ══ SCREEN: LANDING ══ -->
-<div id="screen-landing" class="screen active">
-  <div class="panel center">
+<!-- ══════════════════════════════ HOME ══════════════════════════════ -->
+<div class="screen active" id="screen-home">
+  <div class="panel" style="text-align:center;">
     <div class="logo">FAIRBRIX</div>
-    <div class="tagline">Ultimate Quest — Earn. Compete. Conquer.</div>
-    <p style="margin-bottom:2rem;">Answer blockchain & crypto questions, track your X contributions, and climb the global leaderboard to win FBX rewards.</p>
-    <button class="btn btn-twitter" onclick="loginWithTwitter()">
-      𝕏 &nbsp; Sign in with X to Play
-    </button>
-    <div class="divider"></div>
-    <button class="btn btn-outline" style="width:100%" onclick="showScreen('screen-leaderboard'); loadLeaderboard()">
-      🏆 &nbsp; View Leaderboard
-    </button>
+    <div class="tagline">Daily Quest · Learn · Earn</div>
+
+    <div class="prize-pool">
+      <div class="prize-label">This Week's Prize Pool</div>
+      <div class="prize-amount" id="home-pool">2,184 FBX</div>
+      <div style="font-size:0.75rem;color:var(--dim);margin-top:0.4rem;">Paid out Sunday · 8 qualified streakers</div>
+    </div>
+
+    <h3>YOUR STREAK THIS WEEK</h3>
+    <div class="streak-row" id="home-streak"></div>
+    <div style="font-size:0.82rem;color:var(--dim);margin-bottom:1.5rem;" id="streak-msg">Complete 6 days to qualify for Sunday payout!</div>
+
+    <div class="cost-badge" style="margin-bottom:1.5rem;">⬡ Entry fee: 3 FBX per day</div>
+
+    <div class="anticheat-badge" style="justify-content:center;">
+      <span></span> Anti-cheat active · tab-switching detected · session locked per device
+    </div>
+
+    <button class="btn btn-primary" id="play-btn" onclick="startGame()">▶ PLAY TODAY'S QUEST</button>
+    <button class="btn btn-outline" onclick="showScreen('screen-leaderboard')">LEADERBOARD</button>
+    <button class="btn btn-outline" onclick="showScreen('screen-how')">HOW TO PLAY</button>
   </div>
 </div>
 
-<!-- ══ SCREEN: LOBBY ══ -->
-<div id="screen-lobby" class="screen">
-  <div class="panel center">
-    <div class="logo" style="font-size:2rem;">FAIRBRIX</div>
-    <div class="tagline">Welcome back</div>
-    <div id="lobby-avatar" style="margin-bottom:1.5rem;"></div>
-    <div id="lobby-stats" style="margin-bottom:2rem;"></div>
-    <button class="btn btn-primary" style="width:100%;margin-bottom:0.75rem;" onclick="startQuiz()">🎮 &nbsp; Start Quiz</button>
-    <button class="btn btn-gold" style="width:100%;margin-bottom:0.75rem;" onclick="showScreen('screen-leaderboard'); loadLeaderboard()">🏆 &nbsp; Leaderboard</button>
-    <button class="btn btn-outline" style="width:100%" onclick="showScreen('screen-twitter')">𝕏 &nbsp; Track X Contributions</button>
-  </div>
-</div>
-
-<!-- ══ SCREEN: QUIZ ══ -->
-<div id="screen-quiz" class="screen">
-  <div class="panel" style="max-width:700px;">
-    <div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div>
-    <div class="q-number" id="q-number">Question 1 of 10</div>
-    <div class="q-text" id="q-text"></div>
-    <div class="options" id="q-options"></div>
-    <div id="q-feedback"></div>
-  </div>
-</div>
-
-<!-- ══ SCREEN: SURVEY ══ -->
-<div id="screen-survey" class="screen">
+<!-- ══════════════════════════════ HOW TO PLAY ══════════════════════════════ -->
+<div class="screen" id="screen-how">
   <div class="panel">
-    <h2>Mission Debrief</h2>
-    <p style="margin-bottom:1.5rem;">One last step — share your vision to complete your submission.</p>
+    <div class="logo" style="font-size:1.4rem;text-align:center;margin-bottom:0.2rem;">HOW TO PLAY</div>
+    <div class="tagline" style="text-align:center;">Fairbrix Daily Quest</div>
 
-    <label>Your name / display name</label>
-    <input class="field" id="sv-name" type="text" placeholder="e.g. CryptoHero42" />
+    <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:1.5rem;">
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:1rem;border:1px solid var(--border);border-radius:12px;background:rgba(0,255,100,0.03);">
+        <div style="font-size:1.6rem;flex-shrink:0;">⬡</div>
+        <div><div style="font-weight:600;color:var(--gold);margin-bottom:0.3rem;">Pay 3 FBX to enter</div><div style="font-size:0.85rem;color:var(--dim);">Each daily session costs 3 FBX. All fees go into the weekly prize pool.</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:1rem;border:1px solid var(--border);border-radius:12px;background:rgba(0,255,100,0.03);">
+        <div style="font-size:1.6rem;flex-shrink:0;">🧠</div>
+        <div><div style="font-weight:600;color:var(--green);margin-bottom:0.3rem;">Answer 5 questions</div><div style="font-size:0.85rem;color:var(--dim);">Crypto, blockchain & DeFi questions. You have <strong style="color:var(--gold);">15 seconds</strong> per question. Faster = bonus points!</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:1rem;border:1px solid var(--border);border-radius:12px;background:rgba(0,255,100,0.03);">
+        <div style="font-size:1.6rem;flex-shrink:0;">🔥</div>
+        <div><div style="font-weight:600;color:var(--gold);margin-bottom:0.3rem;">Build a 6-day streak</div><div style="font-size:0.85rem;color:var(--dim);">Play 6 consecutive days to qualify for Sunday's payout. Miss a day — streak resets!</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:1rem;border:1px solid rgba(245,200,66,0.25);border-radius:12px;background:rgba(245,200,66,0.04);">
+        <div style="font-size:1.6rem;flex-shrink:0;">🏆</div>
+        <div><div style="font-weight:600;color:var(--gold);margin-bottom:0.3rem;">Sunday payout</div><div style="font-size:0.85rem;color:var(--dim);">Qualified streakers share the prize pool based on their weekly score. Top scorer gets the biggest share!</div></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:1rem;border:1px solid rgba(255,77,109,0.2);border-radius:12px;background:rgba(255,77,109,0.04);">
+        <div style="font-size:1.6rem;flex-shrink:0;">🚫</div>
+        <div><div style="font-weight:600;color:var(--red);margin-bottom:0.3rem;">Anti-cheat rules</div><div style="font-size:0.85rem;color:var(--dim);">Switching tabs during a game is recorded. Using bots or multiple accounts results in permanent suspension.</div></div>
+      </div>
+    </div>
 
-    <label>Your X / Twitter link (optional)</label>
-    <input class="field" id="sv-twitter" type="text" placeholder="https://x.com/yourhandle" />
-
-    <label>What's your vision for blockchain's future?</label>
-    <textarea class="field" id="sv-vision" rows="3" placeholder="Share your thoughts..."></textarea>
-
-    <label>Favourite blockchain project</label>
-    <input class="field" id="sv-blockchain" type="text" placeholder="e.g. Ethereum, Solana, Fairbrix..." />
-
-    <label>Testimonial (optional)</label>
-    <textarea class="field" id="sv-testimonial" rows="2" placeholder="What do you think of Fairbrix?"></textarea>
-
-    <button class="btn btn-primary" style="width:100%" onclick="submitQuiz()">⚡ &nbsp; Submit & See Results</button>
+    <button class="btn btn-primary" onclick="showScreen('screen-home')">← BACK TO HOME</button>
   </div>
 </div>
 
-<!-- ══ SCREEN: RESULTS ══ -->
-<div id="screen-results" class="screen">
-  <div class="panel center">
-    <h2>Quest Complete</h2>
-    <div class="score-big" id="res-score">0</div>
-    <div style="font-size:0.85rem;color:var(--dim);margin-bottom:1.5rem;" id="res-label">points earned</div>
-    <div id="res-stats"></div>
-    <div class="divider"></div>
-    <div class="nav">
-      <button class="btn btn-primary" onclick="startQuiz()">🔁 &nbsp; Play Again</button>
-      <button class="btn btn-gold" onclick="showScreen('screen-leaderboard'); loadLeaderboard()">🏆 &nbsp; Leaderboard</button>
-      <button class="btn btn-outline" onclick="showScreen('screen-twitter')">𝕏 &nbsp; Track X</button>
+<!-- ══════════════════════════════ GAME ══════════════════════════════ -->
+<div class="screen" id="screen-game">
+  <div class="panel">
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+      <div class="logo" style="font-size:1.1rem;">FAIRBRIX QUEST</div>
+      <div class="cost-badge" style="font-size:0.72rem;">⬡ 3 FBX</div>
     </div>
+
+    <!-- Score row -->
+    <div class="score-row" style="margin-bottom:1rem;">
+      <div class="score-item"><div class="score-label">Score</div><div class="score-val green" id="g-score">0</div></div>
+      <div class="score-item"><div class="score-label">Correct</div><div class="score-val" id="g-correct">0/0</div></div>
+      <div class="score-item"><div class="score-label">Streak</div><div class="score-val" style="color:var(--red);">🔥 <span id="g-streak">5</span></div></div>
+    </div>
+
+    <!-- Progress dots -->
+    <div class="q-dots" id="q-dots"></div>
+
+    <!-- Millionaire-style circular timer -->
+    <div class="timer-wrap">
+      <svg class="timer-svg" width="110" height="110" viewBox="0 0 110 110">
+        <circle class="timer-bg" cx="55" cy="55" r="45"/>
+        <circle class="timer-ring" id="timer-ring" cx="55" cy="55" r="45" stroke="var(--green)"/>
+      </svg>
+      <div class="timer-center" id="timer-num">15</div>
+    </div>
+
+    <!-- Lifelines -->
+    <div class="lifelines">
+      <button class="lifeline-btn" id="ll-5050" onclick="useLifeline('5050')">50 : 50</button>
+      <button class="lifeline-btn" id="ll-skip" onclick="useLifeline('skip')">SKIP</button>
+      <button class="lifeline-btn" id="ll-extra" onclick="useLifeline('extra')">+5 SEC</button>
+    </div>
+
+    <!-- Category + Question -->
+    <div class="q-category" id="g-cat">CRYPTO BASICS</div>
+    <div class="q-text" id="g-text">Loading...</div>
+
+    <!-- Options -->
+    <div class="options" id="g-options"></div>
+
+    <!-- Feedback -->
+    <div class="feedback" id="g-feedback"></div>
   </div>
 </div>
 
-<!-- ══ SCREEN: LEADERBOARD ══ -->
-<div id="screen-leaderboard" class="screen">
-  <div class="panel" style="max-width:700px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-      <h2 style="margin:0;">🏆 Hall of Fame</h2>
-      <button class="btn btn-outline" style="font-size:0.7rem;padding:0.4rem 0.8rem;" onclick="loadLeaderboard()">↻ Refresh</button>
+<!-- ══════════════════════════════ RESULT ══════════════════════════════ -->
+<div class="screen" id="screen-result">
+  <div class="panel" style="text-align:center;">
+    <div class="result-icon" id="r-icon">🏆</div>
+    <div class="result-title" id="r-title">QUEST COMPLETE!</div>
+    <div class="result-sub" id="r-sub">Great performance today!</div>
+
+    <div class="score-row" style="margin-bottom:1.5rem;">
+      <div class="score-item"><div class="score-label">Final Score</div><div class="score-val green" id="r-score">0</div></div>
+      <div class="score-item"><div class="score-label">Correct</div><div class="score-val" id="r-correct">0/5</div></div>
+      <div class="score-item"><div class="score-label">FBX Spent</div><div class="score-val red">−3</div></div>
     </div>
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('total')">Total</button>
-      <button class="tab" onclick="switchTab('quiz')">Quiz</button>
-      <button class="tab" onclick="switchTab('twitter')">X Score</button>
+
+    <h3>UPDATED STREAK</h3>
+    <div class="streak-row" id="r-streak"></div>
+    <div style="font-size:0.82rem;margin-bottom:1.5rem;" id="r-streak-msg"></div>
+
+    <!-- Tab-switch warning -->
+    <div id="r-cheat-warning" style="display:none;padding:0.8rem;border-radius:10px;background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.3);color:var(--red);font-size:0.82rem;margin-bottom:1rem;">
+      ⚠ Tab switching detected <span id="r-tab-count">0</span> time(s). Flagged for review. Repeated violations may result in suspension.
     </div>
-    <div id="lb-list"><div class="spinner"></div></div>
-    <div class="nav">
-      <button class="btn btn-outline" onclick="goBack()">← Back</button>
-    </div>
+
+    <button class="btn btn-gold" onclick="showScreen('screen-home')">HOME</button>
+    <button class="btn btn-outline" onclick="showScreen('screen-leaderboard')">LEADERBOARD</button>
   </div>
 </div>
 
-<!-- ══ SCREEN: TWITTER ══ -->
-<div id="screen-twitter" class="screen">
-  <div class="panel center">
-    <h2>𝕏 Contribution Tracker</h2>
-    <p style="margin-bottom:1.5rem;">We'll scan X for Fairbrix mentions from your handle and credit you with contribution points.</p>
-    <label style="text-align:left;display:block;">Your X handle</label>
-    <input class="field" id="tw-handle" type="text" placeholder="@yourhandle" />
-    <button class="btn btn-primary" style="width:100%;margin-bottom:1rem;" onclick="trackTwitter()">🔍 &nbsp; Scan My X Activity</button>
-    <div id="tw-results"></div>
-    <div class="nav">
-      <button class="btn btn-outline" onclick="goBack()">← Back</button>
+<!-- ══════════════════════════════ LEADERBOARD ══════════════════════════════ -->
+<div class="screen" id="screen-leaderboard">
+  <div class="panel">
+    <div class="logo" style="font-size:1.4rem;text-align:center;margin-bottom:0.2rem;">LEADERBOARD</div>
+    <div class="tagline" style="text-align:center;">Week of Apr 7–13, 2026</div>
+
+    <div class="prize-pool" style="margin-bottom:1.5rem;">
+      <div class="prize-label">Current Prize Pool</div>
+      <div class="prize-amount">2,184 FBX</div>
+      <div style="font-size:0.72rem;color:var(--dim);margin-top:0.3rem;">Payout Sunday 23:59 UTC · Must complete 6-day streak to qualify</div>
     </div>
+
+    <div id="lb-list"></div>
+
+    <hr class="divider"/>
+    <button class="btn btn-outline" onclick="showScreen('screen-home')">← BACK</button>
   </div>
 </div>
 
-<div id="toast"></div>
+<!-- ══════════════════════════════ SUSPENDED ══════════════════════════════ -->
+<div class="screen" id="screen-suspended">
+  <div class="panel suspended-screen">
+    <div class="sus-icon">🚫</div>
+    <div class="result-title" style="color:var(--red);-webkit-text-fill-color:var(--red);">ACCOUNT SUSPENDED</div>
+    <div style="color:var(--dim);font-size:0.9rem;margin:1rem 0 2rem;">Your account has been suspended due to suspicious activity. Please contact Fairbrix support to appeal.</div>
+    <div style="padding:1rem;border:1px solid rgba(255,77,109,0.3);border-radius:12px;background:rgba(255,77,109,0.06);font-size:0.82rem;color:var(--red);" id="sus-reason">Reason: Multiple tab switches detected</div>
+  </div>
+</div>
 
 <script>
-// ══════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════
-let currentUser = null;
-let quizQuestions = [];
-let currentQ = 0;
-let quizScore = 0;
-let answered = false;
-let prevScreen = 'screen-landing';
-let lbTab = 'total';
-let lbData = [];
-
-// ══════════════════════════════════════════
-//  QUESTIONS BANK
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// QUESTION BANK
+// ═══════════════════════════════════════════════════════
 const fairbrixQuestions = [
   {
     q: "Why was Fairbrix originally created according to its modern whitepaper?",
@@ -932,301 +658,467 @@ function shuffle(arr) {
   return a;
 }
 
-// ══════════════════════════════════════════
-//  SCREEN MANAGEMENT
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════════════
+const state = {
+  // Simulated user data (in real app: loaded from server)
+  streak: 4,           // days completed this week
+  todayPlayed: false,
+  suspended: false,
+  suspendReason: '',
+  weeklyScore: 1750,
+
+  // Session
+  questions: [],
+  currentQ: 0,
+  score: 0,
+  correctCount: 0,
+  answered: false,
+  dotStates: [],       // 'done','wrong-done','current','pending'
+
+  // Timer
+  timeLeft: 15,
+  timerInterval: null,
+  totalTime: 15,
+
+  // Anti-cheat
+  tabSwitches: 0,
+  sessionStart: 0,
+  sessionToken: '',
+  gameActive: false,
+
+  // Lifelines
+  ll5050used: false,
+  llSkipUsed: false,
+  llExtraUsed: false,
+};
+
+const LEADERBOARD = [
+  {rank:1,name:'CryptoKing_ZA',streak:6,score:2890,qualified:true},
+  {rank:2,name:'FairMiner99',streak:6,score:2640,qualified:true},
+  {rank:3,name:'BlockQueen',streak:6,score:2310,qualified:true},
+  {rank:4,name:'SatoshiFan',streak:5,score:1980,qualified:false},
+  {rank:5,name:'YOU',streak:4,score:1750,qualified:false,isYou:true},
+  {rank:6,name:'Hodler2026',streak:3,score:890,qualified:false},
+  {rank:7,name:'DeFiDave',streak:2,score:430,qualified:false},
+];
+
+// ═══════════════════════════════════════════════════════
+// ANTI-CHEAT
+// ═══════════════════════════════════════════════════════
+document.addEventListener('visibilitychange', () => {
+  if (state.gameActive && document.hidden) {
+    state.tabSwitches++;
+    // Log to server in real implementation:
+    // fetch('/api/anticheat', { method:'POST', body: JSON.stringify({ event:'tab_switch', sessionToken: state.sessionToken, count: state.tabSwitches }) })
+    console.warn('[ANTICHEAT] Tab switch #' + state.tabSwitches);
+    if (state.tabSwitches >= 3) {
+      endGameEarly('tab_abuse');
+    }
+  }
+});
+
+// Block right-click during game
+document.addEventListener('contextmenu', e => { if (state.gameActive) e.preventDefault(); });
+
+// Block common keyboard shortcuts during game
+document.addEventListener('keydown', e => {
+  if (state.gameActive) {
+    if ((e.ctrlKey || e.metaKey) && ['c','v','u','i','j','s'].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+    }
+    if (e.key === 'F12') e.preventDefault();
+  }
+});
+
+function generateSessionToken() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+// ═══════════════════════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════════════════════
 function showScreen(id) {
-  prevScreen = document.querySelector('.screen.active')?.id || 'screen-landing';
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
 }
 
-function goBack() { showScreen(prevScreen); }
-
-// ══════════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════════
-async function checkSession() {
-  try {
-    const r = await fetch('/auth/me', { credentials: 'include' });
-    if (r.ok) {
-      const { user } = await r.json();
-      if (user) { setUser(user); return true; }
-    }
-  } catch(e) {}
-  return false;
-}
-
-function setUser(user) {
-  currentUser = user;
-  const bar = document.getElementById('user-bar');
-  bar.classList.add('visible');
-  document.getElementById('ub-handle').textContent = '@' + (user.twitterHandle || user.displayName || 'player');
-  document.getElementById('ub-score').textContent = '⚡ ' + (user.totalScore || 0) + ' pts';
-}
-
-function loginWithTwitter() {
-  window.location.href = '/auth/twitter';
-}
-
-async function logout() {
-  await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
-  currentUser = null;
-  document.getElementById('user-bar').classList.remove('visible');
-  showScreen('screen-landing');
-  toast('Logged out.');
-}
-
-function showLobby() {
-  if (!currentUser) return showScreen('screen-landing');
-  const u = currentUser;
-  document.getElementById('lobby-avatar').innerHTML =
-    u.profileImage ? `<img src="${u.profileImage}" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--green);" />` : '';
-  document.getElementById('lobby-stats').innerHTML = `
-    <div class="stat-row"><span class="stat-label">Handle</span><span class="stat-val">@${u.twitterHandle || u.displayName || '—'}</span></div>
-    <div class="stat-row"><span class="stat-label">Quiz Score</span><span class="stat-val">${u.quizScore || 0}</span></div>
-    <div class="stat-row"><span class="stat-label">X Contributions</span><span class="stat-val">${u.contributionScore || 0}</span></div>
-    <div class="stat-row"><span class="stat-label">Total Score</span><span class="stat-val gold">${u.totalScore || 0}</span></div>
-  `;
-  showScreen('screen-lobby');
-}
-
-// ══════════════════════════════════════════
-//  QUIZ
-// ══════════════════════════════════════════
-function startQuiz() {
-  quizQuestions = shuffle(ALL_QUESTIONS).slice(0, 10);
-  currentQ = 0;
-  quizScore = 0;
-  showScreen('screen-quiz');
-  renderQuestion();
-}
-
-function renderQuestion() {
-  const q = quizQuestions[currentQ];
-  const total = quizQuestions.length;
-  document.getElementById('quiz-progress').style.width = ((currentQ / total) * 100) + '%';
-  document.getElementById('q-number').textContent = `Question ${currentQ + 1} of ${total}`;
-  document.getElementById('q-text').textContent = q.q;
-  document.getElementById('q-feedback').innerHTML = '';
-  answered = false;
-
-  const opts = document.getElementById('q-options');
-  opts.innerHTML = '';
-  // Shuffle options display order
-  const indices = shuffle([0,1,2,3]);
-  indices.forEach(i => {
-    const btn = document.createElement('button');
-    btn.className = 'option';
-    btn.textContent = q.opts[i];
-    btn.onclick = () => selectAnswer(i, btn, q.ans);
-    opts.appendChild(btn);
+// ═══════════════════════════════════════════════════════
+// HOME SCREEN SETUP
+// ═══════════════════════════════════════════════════════
+function renderHomeStreak() {
+  const days = ['MON','TUE','WED','THU','FRI','SAT'];
+  const container = document.getElementById('home-streak');
+  container.innerHTML = '';
+  days.forEach((d, i) => {
+    const div = document.createElement('div');
+    div.className = 'day-dot';
+    if (i < state.streak) { div.classList.add('done'); div.innerHTML = `<span>${d}</span>`; }
+    else if (i === state.streak && !state.todayPlayed) { div.classList.add('today'); div.innerHTML = `<span>${d}</span>`; }
+    else { div.innerHTML = `<span>${d}</span>`; }
+    container.appendChild(div);
   });
-}
+  // Payout dot
+  const payout = document.createElement('div');
+  payout.className = 'day-dot payout';
+  payout.innerHTML = 'PAY<br>OUT';
+  container.appendChild(payout);
 
-function selectAnswer(chosen, btn, correct) {
-  if (answered) return;
-  answered = true;
-  const allOpts = document.querySelectorAll('.option');
-  allOpts.forEach(o => o.classList.add('disabled'));
-
-  if (chosen === correct) {
-    btn.classList.add('correct');
-    quizScore++;
-    document.getElementById('q-feedback').innerHTML = '<span class="feedback correct">✓ Correct!</span>';
+  const msg = document.getElementById('streak-msg');
+  if (state.todayPlayed) {
+    msg.textContent = '✅ Today complete! Come back tomorrow.';
+    msg.style.color = 'var(--green)';
+    document.getElementById('play-btn').disabled = true;
+    document.getElementById('play-btn').textContent = '✓ PLAYED TODAY';
+  } else if (state.streak >= 6) {
+    msg.textContent = '🏆 You\'ve qualified for Sunday payout!';
+    msg.style.color = 'var(--gold)';
   } else {
-    btn.classList.add('wrong');
-    // Highlight correct
-    allOpts.forEach(o => {
-      if (o.textContent === quizQuestions[currentQ].opts[correct]) o.classList.add('correct');
-    });
-    document.getElementById('q-feedback').innerHTML = '<span class="feedback wrong">✗ Wrong</span>';
-  }
-
-  setTimeout(() => {
-    currentQ++;
-    if (currentQ < quizQuestions.length) {
-      renderQuestion();
-    } else {
-      endQuiz();
-    }
-  }, 1200);
-}
-
-function endQuiz() {
-  // Pre-fill survey name if logged in
-  if (currentUser) {
-    document.getElementById('sv-name').value = currentUser.displayName || currentUser.twitterHandle || '';
-  }
-  showScreen('screen-survey');
-}
-
-// ══════════════════════════════════════════
-//  SUBMIT
-// ══════════════════════════════════════════
-async function submitQuiz() {
-  const name = document.getElementById('sv-name').value.trim();
-  if (!name) { toast('Please enter your name.', true); return; }
-
-  const body = {
-    name,
-    quizScore,
-    total: quizQuestions.length,
-    futureVision: document.getElementById('sv-vision').value.trim(),
-    blockchain: document.getElementById('sv-blockchain').value.trim(),
-    testimonial: document.getElementById('sv-testimonial').value.trim(),
-    twitterLink: document.getElementById('sv-twitter').value.trim(),
-  };
-
-  try {
-    const r = await fetch('/api/submit-quiz', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    const data = await r.json();
-    if (r.ok) {
-      if (data.user) setUser(data.user);
-      showResults(data);
-    } else {
-      toast(data.message || 'Submission failed.', true);
-    }
-  } catch(e) {
-    // Offline fallback — show local results
-    showResults({ quizScore, totalScore: quizScore });
-    toast('Saved locally — check your connection.', true);
+    const left = 6 - state.streak;
+    msg.textContent = `🔥 Day ${state.streak + 1} of 6 — ${left} more day${left > 1 ? 's' : ''} to qualify!`;
+    msg.style.color = 'var(--dim)';
   }
 }
 
-function showResults(data) {
-  const score = data.quizScore ?? quizScore;
-  const total = data.totalScore ?? score;
-  document.getElementById('res-score').textContent = score;
-  const pct = Math.round((score / quizQuestions.length) * 100);
-  let grade = pct >= 80 ? '🏆 Elite Fairbrix Agent' : pct >= 60 ? '⚡ Solid Performance' : '📚 Keep Learning';
-  document.getElementById('res-label').textContent = `out of ${quizQuestions.length} — ${grade}`;
-  document.getElementById('res-stats').innerHTML = `
-    <div class="stat-row"><span class="stat-label">Quiz Score</span><span class="stat-val">${score} / ${quizQuestions.length}</span></div>
-    <div class="stat-row"><span class="stat-label">Accuracy</span><span class="stat-val">${pct}%</span></div>
-    <div class="stat-row"><span class="stat-label">Total Score</span><span class="stat-val gold">⚡ ${total}</span></div>
-  `;
-  showScreen('screen-results');
-}
-
-// ══════════════════════════════════════════
-//  LEADERBOARD
-// ══════════════════════════════════════════
-async function loadLeaderboard() {
-  document.getElementById('lb-list').innerHTML = '<div class="spinner"></div>';
-  try {
-    const r = await fetch('/api/leaderboard', { credentials: 'include' });
-    const data = await r.json();
-    lbData = data.leaderboard || [];
-    renderLeaderboard();
-  } catch(e) {
-    document.getElementById('lb-list').innerHTML = '<p style="text-align:center;">Could not load leaderboard.</p>';
-  }
-}
-
-function switchTab(tab) {
-  lbTab = tab;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
-  renderLeaderboard();
-}
-
+// ═══════════════════════════════════════════════════════
+// LEADERBOARD
+// ═══════════════════════════════════════════════════════
 function renderLeaderboard() {
-  const list = document.getElementById('lb-list');
-  if (!lbData.length) { list.innerHTML = '<p style="text-align:center;color:var(--dim);">No players yet — be the first!</p>'; return; }
-
-  const sorted = [...lbData].sort((a, b) => {
-    const key = lbTab === 'quiz' ? 'quizScore' : lbTab === 'twitter' ? 'contributionScore' : 'totalScore';
-    return (b[key] || 0) - (a[key] || 0);
-  });
-
-  list.innerHTML = sorted.slice(0, 20).map((u, i) => {
-    const rank = i + 1;
-    const cls = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
-    const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
-    const scoreKey = lbTab === 'quiz' ? 'quizScore' : lbTab === 'twitter' ? 'contributionScore' : 'totalScore';
-    const name = u.displayName || u.twitterHandle || 'Anonymous';
-    return `
-      <div class="lb-row ${cls}">
-        <div class="lb-rank">${medal}</div>
-        <div class="lb-name">${name}${u.twitterHandle ? `<br><span style="font-size:0.75rem;color:var(--dim);">@${u.twitterHandle}</span>` : ''}</div>
-        <div class="lb-score">⚡ ${u[scoreKey] || 0}</div>
-      </div>`;
-  }).join('');
+  const el = document.getElementById('lb-list');
+  el.innerHTML = LEADERBOARD.map(p => `
+    <div class="lb-row ${p.qualified ? 'qualified' : ''} ${p.isYou ? 'you' : ''}">
+      <div class="lb-rank" style="color:${p.rank <= 3 ? 'var(--gold)' : 'var(--dim)'};">${p.rank <= 3 ? ['🥇','🥈','🥉'][p.rank-1] : p.rank}</div>
+      <div style="flex:1;">
+        <div style="font-weight:600;font-size:0.9rem;color:${p.isYou ? 'var(--green)' : 'var(--text)'};">${p.name}${p.isYou ? ' (you)' : ''}</div>
+        <div style="font-size:0.72rem;color:var(--dim);">🔥 ${p.streak}-day streak</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--gold);">${p.score.toLocaleString()}</div>
+        <div style="font-size:0.65rem;letter-spacing:0.1em;color:${p.qualified ? 'var(--green)' : 'var(--dim)'};">${p.qualified ? '✓ QUALIFIED' : 'not qualified'}</div>
+      </div>
+    </div>
+  `).join('');
 }
 
-// ══════════════════════════════════════════
-//  TWITTER TRACKER
-// ══════════════════════════════════════════
-async function trackTwitter() {
-  const handle = document.getElementById('tw-handle').value.trim().replace('@', '');
-  if (!handle) { toast('Enter your X handle first.', true); return; }
+// ═══════════════════════════════════════════════════════
+// GAME START
+// ═══════════════════════════════════════════════════════
+function startGame() {
+  if (state.suspended) { showSuspended(state.suspendReason); return; }
+  if (state.todayPlayed) return;
 
-  document.getElementById('tw-results').innerHTML = '<div class="spinner"></div>';
-  try {
-    const r = await fetch('/api/track-twitter', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ twitterHandle: handle }),
-    });
-    const data = await r.json();
-    if (r.ok) {
-      const m = data.metrics || {};
-      if (data.user) setUser(data.user);
-      document.getElementById('tw-results').innerHTML = `
-        <div style="margin-top:1rem;">
-          <div class="stat-row"><span class="stat-label">Fairbrix Tweets</span><span class="stat-val">${m.tweetCount || 0}</span></div>
-          <div class="stat-row"><span class="stat-label">Likes</span><span class="stat-val">${m.likes || 0}</span></div>
-          <div class="stat-row"><span class="stat-label">Reposts</span><span class="stat-val">${m.reposts || 0}</span></div>
-          <div class="stat-row"><span class="stat-label">Replies</span><span class="stat-val">${m.replies || 0}</span></div>
-          <div class="stat-row"><span class="stat-label">Contribution Score</span><span class="stat-val gold">⚡ ${m.score || 0}</span></div>
-          <div class="stat-row"><span class="stat-label">Total Score</span><span class="stat-val gold">⚡ ${data.totalScore || 0}</span></div>
-        </div>`;
-      toast('X activity tracked successfully!');
-    } else {
-      document.getElementById('tw-results').innerHTML = `<p style="color:#ff6b6b;">${data.message || 'Error tracking.'}</p>`;
+  // In real app: POST /api/game/start with userId + deduct 3 FBX
+  state.sessionToken = generateSessionToken();
+  state.sessionStart = Date.now();
+  state.currentQ = 0;
+  state.score = 0;
+  state.correctCount = 0;
+  state.tabSwitches = 0;
+  state.answered = false;
+  state.gameActive = true;
+  state.ll5050used = false;
+  state.llSkipUsed = false;
+  state.llExtraUsed = false;
+
+  // Shuffle and pick 5 questions
+  state.questions = [...QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 5);
+  state.dotStates = state.questions.map(() => 'pending');
+
+  resetLifelines();
+  renderDots();
+  showScreen('screen-game');
+  loadQuestion();
+}
+
+// ═══════════════════════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════════════════════
+function startTimer(seconds) {
+  state.timeLeft = seconds;
+  state.totalTime = seconds;
+  clearInterval(state.timerInterval);
+  updateTimerUI();
+  state.timerInterval = setInterval(() => {
+    state.timeLeft -= 0.1;
+    updateTimerUI();
+    if (state.timeLeft <= 0) {
+      clearInterval(state.timerInterval);
+      handleTimeout();
     }
-  } catch(e) {
-    document.getElementById('tw-results').innerHTML = '<p style="color:#ff6b6b;">Could not reach server.</p>';
+  }, 100);
+}
+
+function updateTimerUI() {
+  const pct = Math.max(0, state.timeLeft / state.totalTime);
+  const circumference = 2 * Math.PI * 45; // r=45
+  const offset = circumference * (1 - pct);
+  const ring = document.getElementById('timer-ring');
+  const numEl = document.getElementById('timer-num');
+  const display = Math.ceil(state.timeLeft);
+
+  ring.style.strokeDashoffset = offset;
+  numEl.textContent = display;
+
+  if (state.timeLeft <= 5) {
+    ring.style.stroke = 'var(--red)';
+    numEl.classList.add('danger');
+  } else if (state.timeLeft <= 9) {
+    ring.style.stroke = 'var(--gold)';
+    numEl.classList.remove('danger');
+  } else {
+    ring.style.stroke = 'var(--green)';
+    numEl.classList.remove('danger');
   }
 }
 
-// ══════════════════════════════════════════
-//  TOAST
-// ══════════════════════════════════════════
-let toastTimer;
-function toast(msg, isError = false) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'show' + (isError ? ' error' : '');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.className = '', 3000);
+// ═══════════════════════════════════════════════════════
+// QUESTION LOADING
+// ═══════════════════════════════════════════════════════
+function loadQuestion() {
+  if (state.currentQ >= state.questions.length) { endGame(); return; }
+  state.answered = false;
+  const q = state.questions[state.currentQ];
+
+  document.getElementById('g-cat').textContent = q.cat;
+  document.getElementById('g-text').textContent = q.q;
+  document.getElementById('g-score').textContent = state.score;
+  document.getElementById('g-correct').textContent = state.correctCount + '/' + state.currentQ;
+  document.getElementById('g-feedback').textContent = '';
+  document.getElementById('g-feedback').className = 'feedback';
+
+  state.dotStates[state.currentQ] = 'current';
+  renderDots();
+
+  const container = document.getElementById('g-options');
+  container.innerHTML = q.opts.map((o, i) => `
+    <button class="option" id="opt-${i}" onclick="answer(${i})">
+      <div class="option-letter">${String.fromCharCode(65+i)}</div>
+      <span>${o}</span>
+    </button>
+  `).join('');
+
+  startTimer(15);
 }
 
-// ══════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════
-(async () => {
-  const loggedIn = await checkSession();
-  // If redirected back from Twitter OAuth
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('auth') === 'success' && loggedIn) {
-    window.history.replaceState({}, '', '/');
-    showLobby();
-    toast('Welcome back, @' + (currentUser.twitterHandle || 'player') + '!');
-    return;
+// ═══════════════════════════════════════════════════════
+// ANSWER HANDLER
+// ═══════════════════════════════════════════════════════
+function answer(idx) {
+  if (state.answered) return;
+  state.answered = true;
+  clearInterval(state.timerInterval);
+
+  const q = state.questions[state.currentQ];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.classList.add('disabled'));
+
+  const timeBonus = Math.round((state.timeLeft / state.totalTime) * 100);
+  const fb = document.getElementById('g-feedback');
+
+  if (idx === q.ans) {
+    opts[idx].classList.add('correct');
+    const pts = 100 + timeBonus;
+    state.score += pts;
+    state.correctCount++;
+    state.dotStates[state.currentQ] = 'done';
+    fb.textContent = `✅ Correct! +${pts} pts (speed bonus: +${timeBonus})`;
+    fb.className = 'feedback correct';
+    if (state.correctCount === state.questions.length) spawnConfetti();
+  } else {
+    opts[idx].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    state.dotStates[state.currentQ] = 'wrong-done';
+    fb.textContent = `❌ Wrong! Correct: ${String.fromCharCode(65 + q.ans)}. ${q.opts[q.ans]}`;
+    fb.className = 'feedback wrong';
   }
-  if (loggedIn) {
-    showLobby();
+
+  document.getElementById('g-score').textContent = state.score;
+  document.getElementById('g-correct').textContent = state.correctCount + '/' + (state.currentQ + 1);
+  renderDots();
+
+  // Log answer to server (real app):
+  // fetch('/api/game/answer', { method:'POST', body: JSON.stringify({ sessionToken: state.sessionToken, qIndex: state.currentQ, selectedIdx: idx, correct: idx===q.ans, timeLeft: state.timeLeft }) })
+
+  setTimeout(() => { state.currentQ++; loadQuestion(); }, 2200);
+}
+
+function handleTimeout() {
+  if (state.answered) return;
+  state.answered = true;
+
+  const q = state.questions[state.currentQ];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.classList.add('disabled'));
+  opts[q.ans].classList.add('correct');
+
+  state.dotStates[state.currentQ] = 'wrong-done';
+  renderDots();
+
+  const fb = document.getElementById('g-feedback');
+  fb.textContent = `⏰ Time's up! Answer: ${String.fromCharCode(65 + q.ans)}. ${q.opts[q.ans]}`;
+  fb.className = 'feedback timeout';
+
+  setTimeout(() => { state.currentQ++; loadQuestion(); }, 2200);
+}
+
+// ═══════════════════════════════════════════════════════
+// LIFELINES
+// ═══════════════════════════════════════════════════════
+function resetLifelines() {
+  ['ll-5050','ll-skip','ll-extra'].forEach(id => {
+    document.getElementById(id).disabled = false;
+  });
+}
+
+function useLifeline(type) {
+  if (state.answered) return;
+  if (type === '5050' && !state.ll5050used) {
+    state.ll5050used = true;
+    document.getElementById('ll-5050').disabled = true;
+    const q = state.questions[state.currentQ];
+    let removed = 0;
+    for (let i = 0; i < q.opts.length && removed < 2; i++) {
+      if (i !== q.ans) {
+        const el = document.getElementById('opt-' + i);
+        if (el) { el.style.opacity = '0.2'; el.classList.add('disabled'); removed++; }
+      }
+    }
+  } else if (type === 'skip' && !state.llSkipUsed) {
+    state.llSkipUsed = true;
+    document.getElementById('ll-skip').disabled = true;
+    clearInterval(state.timerInterval);
+    state.answered = true;
+    state.dotStates[state.currentQ] = 'wrong-done';
+    renderDots();
+    document.getElementById('g-feedback').textContent = '⏭ Question skipped (no points)';
+    document.getElementById('g-feedback').className = 'feedback timeout';
+    setTimeout(() => { state.currentQ++; loadQuestion(); }, 1500);
+  } else if (type === 'extra' && !state.llExtraUsed) {
+    state.llExtraUsed = true;
+    document.getElementById('ll-extra').disabled = true;
+    state.timeLeft = Math.min(state.timeLeft + 5, state.totalTime);
   }
-})();
+}
+
+// ═══════════════════════════════════════════════════════
+// PROGRESS DOTS
+// ═══════════════════════════════════════════════════════
+function renderDots() {
+  const container = document.getElementById('q-dots');
+  container.innerHTML = state.dotStates.map(s => `<div class="q-dot ${s}"></div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// END GAME
+// ═══════════════════════════════════════════════════════
+function endGame() {
+  clearInterval(state.timerInterval);
+  state.gameActive = false;
+  state.todayPlayed = true;
+  state.streak = Math.min(state.streak + 1, 6);
+  state.weeklyScore += state.score;
+
+  // Build result screen
+  const perfect = state.correctCount === state.questions.length;
+  document.getElementById('r-icon').textContent = perfect ? '🏆' : state.correctCount >= 3 ? '🎉' : '📚';
+  document.getElementById('r-title').textContent = perfect ? 'PERFECT SCORE!' : state.correctCount >= 3 ? 'QUEST COMPLETE!' : 'KEEP LEARNING!';
+  document.getElementById('r-sub').textContent = `You answered ${state.correctCount}/${state.questions.length} correctly · ${state.score} pts earned`;
+  document.getElementById('r-score').textContent = state.score;
+  document.getElementById('r-correct').textContent = `${state.correctCount}/5`;
+
+  // Streak display
+  const days = ['MON','TUE','WED','THU','FRI','SAT'];
+  const rc = document.getElementById('r-streak');
+  rc.innerHTML = '';
+  days.forEach((d, i) => {
+    const div = document.createElement('div');
+    div.className = 'day-dot';
+    if (i < state.streak) { div.classList.add('done'); div.innerHTML = `<span>${d}</span>`; }
+    else { div.innerHTML = `<span>${d}</span>`; }
+    rc.appendChild(div);
+  });
+  const payout = document.createElement('div');
+  payout.className = 'day-dot payout';
+  payout.innerHTML = 'PAY<br>OUT';
+  rc.appendChild(payout);
+
+  const rmsg = document.getElementById('r-streak-msg');
+  if (state.streak >= 6) {
+    rmsg.textContent = '🏆 6-day streak complete! You qualify for Sunday payout!';
+    rmsg.style.color = 'var(--gold)';
+  } else {
+    rmsg.textContent = `🔥 Day ${state.streak} done! ${6 - state.streak} more to qualify.`;
+    rmsg.style.color = 'var(--green)';
+  }
+
+  // Tab switch warning
+  if (state.tabSwitches > 0) {
+    document.getElementById('r-cheat-warning').style.display = 'block';
+    document.getElementById('r-tab-count').textContent = state.tabSwitches;
+  } else {
+    document.getElementById('r-cheat-warning').style.display = 'none';
+  }
+
+  // In real app: POST /api/game/end { sessionToken, score, correctCount, tabSwitches, duration }
+
+  renderHomeStreak();
+  showScreen('screen-result');
+}
+
+function endGameEarly(reason) {
+  clearInterval(state.timerInterval);
+  state.gameActive = false;
+  if (reason === 'tab_abuse') {
+    const fb = document.getElementById('g-feedback');
+    fb.textContent = '🚫 Too many tab switches detected. Session terminated.';
+    fb.className = 'feedback wrong';
+    document.querySelectorAll('.option').forEach(o => o.classList.add('disabled'));
+    setTimeout(() => endGame(), 2000);
+  }
+}
+
+function showSuspended(reason) {
+  document.getElementById('sus-reason').textContent = 'Reason: ' + (reason || 'Suspicious activity');
+  showScreen('screen-suspended');
+}
+
+// ═══════════════════════════════════════════════════════
+// CONFETTI
+// ═══════════════════════════════════════════════════════
+function spawnConfetti() {
+  const colors = ['#f5c842','#00e87a','#00cfff','#ff4d6d','#ffffff'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left:${Math.random()*100}vw;
+        top:0;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        border-radius:${Math.random()>0.5?'50%':'2px'};
+        width:${6+Math.random()*8}px;
+        height:${6+Math.random()*8}px;
+        animation-duration:${2+Math.random()*2}s;
+        animation-delay:${Math.random()*0.5}s;
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }, i * 30);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+renderHomeStreak();
+renderLeaderboard();
 </script>
 </body>
 </html>
+
+
+
+
+
+
